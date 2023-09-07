@@ -1,19 +1,27 @@
 import { Box } from '@/components/ui/Box'
+import { Button } from '@/components/ui/Button'
 import { Heading } from '@/components/ui/Heading'
 import { Text } from '@/components/ui/Text'
+import { CaretRight } from 'phosphor-react'
 
 export default function Home() {
-  return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center">
-      <Box className="flex flex-col gap-4">
-        <Heading>appcall</Heading>
+  function handleClick() {
+    console.log('ok')
+  }
 
-        <Text className="max-w-2xl">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. A,
-          obcaecati? Quo reprehenderit architecto suscipit in facere placeat
-          ipsam? Nemo aliquid, repellendus eius commodi iste enim harum
-          accusantium sapiente facere illo.
-        </Text>
+  return (
+    <div className="flex h-screen w-screen flex-col justify-center">
+      <Heading size="3xl">Agendamento simplificado</Heading>
+
+      <Text className="max-w-2xl">
+        Integre seu calendário de forma simples e habilite outras pessoas a
+        agendarem compromissos durante seus períodos disponíveis.
+      </Text>
+
+      <Box>
+        <Button icon={CaretRight} onClick={handleClick}>
+          Reservar
+        </Button>
       </Box>
     </div>
   )

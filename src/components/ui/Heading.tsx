@@ -6,14 +6,18 @@ import { cn } from '@/lib/utils'
 const headingVariants = cva('font-title font-bold text-zinc-50 leading-tight', {
   variants: {
     size: {
-      xs: 'text-xl',
-      sm: 'text-2xl',
-      md: 'text-3xl',
-      lg: 'text-6xl',
+      sm: 'text-xl',
+      md: 'text-2xl',
+      lg: 'text-4xl',
+      '2xl': 'text-5xl',
+      '3xl': 'text-6xl',
+      '4xl': 'text-7xl',
+      '5xl': 'text-8xl',
+      '6xl': 'text-9xl',
     },
   },
   defaultVariants: {
-    size: 'md',
+    size: 'sm',
   },
 })
 

@@ -12,7 +12,9 @@ const nunito = Nunito({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={`${exo.variable} ${nunito.variable} font-sans`}>
+    <main
+      className={`${exo.variable} ${nunito.variable} bg-zinc-900 font-sans`}
+    >
       <Component {...pageProps} />
     </main>
   )
