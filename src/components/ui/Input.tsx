@@ -25,7 +25,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </Text>
         )}
 
-        <div className="flex h-12 items-center rounded-lg border-2 border-zinc-900 bg-zinc-900 p-3 focus-within:border-violet-500">
+        <div className="flex h-12 items-center rounded-md border-2 border-zinc-900 bg-zinc-900 p-3 focus-within:border-violet-500">
           <Text as="span" className="text-zinc-400">
             {prefix}
           </Text>

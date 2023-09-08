@@ -48,6 +48,9 @@ const config: Config = {
         zinc: '0px 0px 10px 0px rgba(113, 113, 122, 0.75)',
         red: '0px 0px 10px 0px rgba(239, 68, 68, 0.75)',
       },
+      backgroundImage: {
+        home: "url('../assets/background/home.svg')",
+      },
     },
   },
   plugins: [],
