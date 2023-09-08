@@ -1,6 +1,7 @@
 import { Box } from '@/components/ui/Box'
 import { Button } from '@/components/ui/Button'
 import { Heading } from '@/components/ui/Heading'
+import { Input } from '@/components/ui/Input'
 import { Text } from '@/components/ui/Text'
 import { CaretRight } from 'phosphor-react'
 
@@ -18,9 +19,16 @@ export default function Home() {
         agendarem compromissos durante seus períodos disponíveis.
       </Text>
 
-      <Box>
-        <Button icon={CaretRight} onClick={handleClick}>
-          Reservar
+      <Box className="flex max-w-2xl items-center justify-between gap-4">
+        <Input
+          label="Usuário"
+          prefix="appcall.com/"
+          placeholder="seu-usuario"
+          className="w-full"
+        />
+
+        <Button icon={CaretRight} size="default" onClick={handleClick}>
+          Label
         </Button>
       </Box>
     </div>
