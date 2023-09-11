@@ -30,7 +30,7 @@ export default function Home() {
             </Text>
           </div>
 
-          <Box className="flex items-center justify-between gap-4">
+          <Box className="items-center justify-between">
             <Input
               prefix="appcall.com/"
               placeholder="seu-usuario"

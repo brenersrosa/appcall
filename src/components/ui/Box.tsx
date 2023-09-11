@@ -3,15 +3,19 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 
-const boxVariants = cva('p-6 rounded-lg bg-zinc-800 border border-zinc-700')
+const boxVariants = cva(
+  'flex gap-4 p-6 rounded-lg bg-zinc-800 border border-zinc-700',
+)
 
 interface BoxProps
-  extends React.HTMLAttributes<HTMLParagraphElement>,
-    VariantProps<typeof boxVariants> {}
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof boxVariants> {
+  as?: React.ElementType
+}
 
-const Box = React.forwardRef<HTMLParagraphElement, BoxProps>(
-  ({ className, ...props }, ref) => {
-    const Component = 'div'
+const Box = React.forwardRef<HTMLDivElement, BoxProps>(
+  ({ as, className, ...props }, ref) => {
+    const Component = as || 'div'
 
     return (
       <Component
