@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { CaretRight } from 'phosphor-react'
+import { CaretRight, GoogleLogo } from 'phosphor-react'
 
 import { Box } from '@/components/ui/Box'
 import { Button } from '@/components/ui/Button'
@@ -46,6 +46,23 @@ export default function Home() {
               Reservar
             </Button>
           </Box>
+
+          <div className="flex items-center justify-center gap-4">
+            <div className="h-[1px] w-full rounded-full bg-zinc-600"></div>
+            <Text size="sm" className="text-zinc-400">
+              ou
+            </Text>
+            <div className="h-[1px] w-full rounded-full bg-zinc-600"></div>
+          </div>
+
+          <Button
+            icon={GoogleLogo}
+            iconPosition="left"
+            variant="social"
+            color="red"
+          >
+            Entrar com o Google
+          </Button>
         </div>
 
         <div className="flex items-center justify-end">
