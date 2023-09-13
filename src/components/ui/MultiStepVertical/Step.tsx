@@ -31,8 +31,8 @@ export interface StepProps
   description: string
 }
 
-const Step = React.forwardRef<HTMLSlotElement, StepProps>(
-  ({ className, variant, index, description, ...props }) => {
+const Step = React.forwardRef<HTMLDivElement, StepProps>(
+  ({ className, variant, index, description, ...props }, ref) => {
     const Comp = 'div'
 
     return (
@@ -42,7 +42,11 @@ const Step = React.forwardRef<HTMLSlotElement, StepProps>(
           <Text>{description}</Text>
         </div>
 
-        <Comp className={cn(stepVariants({ variant, className }))} {...props}>
+        <Comp
+          className={cn(stepVariants({ variant, className }))}
+          {...props}
+          ref={ref}
+        >
           {variant === 'checked' && (
             <CircleWavyCheck size={24} color={colors.zinc[50]} />
           )}

@@ -33,7 +33,9 @@ export default function ConnectCalendar() {
             <Button icon={CaretRight}>Conectar</Button>
           </div>
 
-          <Button icon={CaretRight}>Próximo passo</Button>
+          <Button icon={CaretRight} disabled>
+            Próximo passo
+          </Button>
         </Box>
       </div>
     </div>

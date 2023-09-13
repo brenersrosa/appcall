@@ -8,10 +8,13 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
   prefix?: string
+  isInvalid?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, label, prefix, ...props }, ref) => {
+  ({ className, type, label, prefix, isInvalid = false, ...props }, ref) => {
+    const invalidClass = isInvalid ? 'border-red-500' : ''
+
     return (
       <div
         className={cn(
@@ -25,7 +28,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </Text>
         )}
 
-        <div className="flex h-12 items-center rounded-md border-2 border-zinc-900 bg-zinc-900 p-3 transition-all focus-within:border-violet-500">
+        <div
+          className={cn(
+            'flex h-12 items-center rounded-md border-2 border-zinc-900 bg-zinc-900 p-3 transition-all focus-within:border-violet-500',
+            invalidClass,
+          )}
+        >
           <Text as="span" className="text-zinc-400">
             {prefix}
           </Text>
