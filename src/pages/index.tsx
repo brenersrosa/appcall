@@ -9,6 +9,7 @@ import { Text } from '@/components/ui/Text'
 
 import logoImg from '@/assets/logo.svg'
 import heroImg from '@/assets/hero.svg'
+import { ClaimUsernameForm } from '@/components/ClaimUsernameForm'
 
 export default function Home() {
   function handleClick() {
@@ -30,22 +31,7 @@ export default function Home() {
             </Text>
           </div>
 
-          <Box className="items-center justify-between">
-            <Input
-              prefix="appcall.com/"
-              placeholder="seu-usuario"
-              className="w-full"
-            />
-
-            <Button
-              icon={CaretRight}
-              size="default"
-              className="min-w-[172px]"
-              onClick={handleClick}
-            >
-              Reservar
-            </Button>
-          </Box>
+          <ClaimUsernameForm />
 
           <div className="flex items-center justify-center gap-4">
             <div className="h-[1px] w-full rounded-full bg-zinc-600"></div>

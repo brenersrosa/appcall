@@ -1,4 +1,6 @@
-import { CaretRight } from 'phosphor-react'
+import { useRouter } from 'next/router'
+import { signIn, useSession } from 'next-auth/react'
+import { CaretRight, Check, X } from 'phosphor-react'
 
 import { Box } from '@/components/ui/Box'
 import { Button } from '@/components/ui/Button'
@@ -9,6 +11,16 @@ import { Text } from '@/components/ui/Text'
 import { steps } from '@/utils/register-form-steps'
 
 export default function ConnectCalendar() {
+  const session = useSession()
+  const router = useRouter()
+
+  const hasAuthError = !!router.query.error
+  const isSignedId = session.status === 'authenticated'
+
+  async function handleConnectCalendar() {
+    await signIn('google')
+  }
+
   return (
     <div className="mx-auto flex h-screen w-screen max-w-7xl items-center justify-between py-24">
       <div>
@@ -30,10 +42,32 @@ export default function ConnectCalendar() {
           <div className="flex items-center rounded-lg border border-zinc-600 px-6 py-4">
             <Text className="flex w-full">Google Calendar</Text>
 
-            <Button icon={CaretRight}>Conectar</Button>
+            {isSignedId ? (
+              <Button icon={Check} variant="secondary">
+                Conectado
+              </Button>
+            ) : (
+              <Button icon={CaretRight} onClick={handleConnectCalendar}>
+                Conectar
+              </Button>
+            )}
           </div>
 
-          <Button icon={CaretRight} disabled>
+          {hasAuthError && (
+            <div className="flex items-center gap-2">
+              <X className="h-8 w-8 text-red-500" />
+              <Text className="text-sm leading-relaxed text-zinc-400">
+                Falha ao se conectar ao Google, verifique se você habilitou as
+                permissões de acesso ao Google Calendar.
+              </Text>
+            </div>
+          )}
+
+          <Button
+            icon={CaretRight}
+            onClick={() => router.push('/register/time-intervals')}
+            disabled={!session}
+          >
             Próximo passo
           </Button>
         </Box>

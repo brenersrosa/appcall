@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FieldError } from 'react-hook-form'
 
 import { Text } from './Text'
 
@@ -9,11 +10,12 @@ export interface InputProps
   label?: string
   prefix?: string
   isInvalid?: boolean
+  error?: FieldError
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, label, prefix, isInvalid = false, ...props }, ref) => {
-    const invalidClass = isInvalid ? 'border-red-500' : ''
+  ({ className, type, label, prefix, isInvalid = false, error = null, ...props }, ref) => {
+    const invalidClass = isInvalid || error ? 'border-red-500' : ''
 
     return (
       <div
@@ -48,6 +50,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
         </div>
+
+        {error && <span className='text-sm text-red-500 italic'>{error?.message}</span>}
       </div>
     )
   },

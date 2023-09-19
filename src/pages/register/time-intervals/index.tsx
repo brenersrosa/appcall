@@ -162,7 +162,7 @@ export default function TimeIntervals() {
     console.log(meetDuration)
     console.log(intervals)
 
-    // await router.push('/register/update-profile')
+    await router.push('/register/update-profile')
   }
 
   useEffect(() => {
