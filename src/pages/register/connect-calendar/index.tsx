@@ -8,9 +8,14 @@ import { Heading } from '@/components/ui/Heading'
 import { MultiStepVertical } from '@/components/ui/MultiStepVertical'
 import { Text } from '@/components/ui/Text'
 
+import { api } from '@/lib/axios'
+
 import { steps } from '@/utils/register-form-steps'
+import { useState } from 'react'
 
 export default function ConnectCalendar() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const session = useSession()
   const router = useRouter()
 
@@ -19,6 +24,14 @@ export default function ConnectCalendar() {
 
   async function handleConnectCalendar() {
     await signIn('google')
+  }
+
+  async function handleCreateCalendar() {
+    setIsSubmitting(true)
+    await api.put('/users/connect-calendar')
+
+    await router.push('/register/time-intervals')
+    setIsSubmitting(false)
   }
 
   return (
@@ -43,7 +56,7 @@ export default function ConnectCalendar() {
             <Text className="flex w-full">Google Calendar</Text>
 
             {isSignedId ? (
-              <Button icon={Check} variant="secondary">
+              <Button icon={Check} variant="secondary" disabled>
                 Conectado
               </Button>
             ) : (
@@ -65,8 +78,8 @@ export default function ConnectCalendar() {
 
           <Button
             icon={CaretRight}
-            onClick={() => router.push('/register/time-intervals')}
-            disabled={!session}
+            onClick={handleCreateCalendar}
+            disabled={!isSignedId || isSubmitting}
           >
             Próximo passo
           </Button>
