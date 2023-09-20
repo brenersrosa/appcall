@@ -17,6 +17,7 @@ import { Text } from '@/components/ui/Text'
 import { steps } from '@/utils/register-form-steps'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
 import { getWeekDays } from '@/utils/get-week-days'
+import { api } from '@/lib/axios'
 
 const timeIntervalsFormSchema = z.object({
   meetDuration: z.number().min(10).max(180),
@@ -84,7 +85,7 @@ export default function TimeIntervals() {
           enabled: false,
           startTime: '08:00',
           endTime: '18:00',
-          dayMeetDuration: 160,
+          dayMeetDuration: 60,
         },
         {
           weekDay: 1,
@@ -157,10 +158,7 @@ export default function TimeIntervals() {
   async function handleSetTimeIntervals(data: unknown) {
     const { meetDuration, intervals } = data as TimeIntervalsFormOutput
 
-    // await api.post('/users/time-intervals', { intervals })
-
-    console.log(meetDuration)
-    console.log(intervals)
+    await api.post('/users/time-intervals', { meetDuration, intervals })
 
     await router.push('/register/update-profile')
   }
@@ -280,6 +278,7 @@ export default function TimeIntervals() {
             disabled={
               isSubmitting || intervals.every((interval) => !interval.enabled)
             }
+            isLoading={isSubmitting}
           >
             Próximo passo
           </Button>

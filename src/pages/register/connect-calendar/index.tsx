@@ -79,7 +79,8 @@ export default function ConnectCalendar() {
           <Button
             icon={CaretRight}
             onClick={handleCreateCalendar}
-            disabled={!isSignedId || isSubmitting}
+            disabled={!isSignedId}
+            isLoading={!isSubmitting}
           >
             Próximo passo
           </Button>

@@ -3,6 +3,7 @@ import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
+import { Loading } from './Loading'
 
 const buttonVariants = cva(
   'inline-flex items-center gap-2 justify-center h-12 border-none rounded-md font-medium transition-all disabled:pointer-events-none disabled:bg-zinc-600/70',
@@ -41,6 +42,7 @@ export interface ButtonProps
   icon?: React.ElementType
   iconPosition?: 'left' | 'right'
   color?: string
+  isLoading?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -53,6 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon: Icon = () => null,
       iconPosition = 'right',
       color,
+      isLoading = false,
       ...props
     },
     ref,
@@ -65,19 +68,32 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ? `hover:bg-${color}-600 hover:shadow-${color}`
       : ''
 
+    const isDisabledClass = isLoading ? 'pointer-events-none' : ''
+
     return (
       <Comp
         className={cn(
           buttonVariants({ variant, size, className }),
           colorClass,
           hoverClass,
+          isDisabledClass,
         )}
         ref={ref}
         {...props}
       >
-        {iconPosition === 'left' && <Icon className="h-5 w-5 text-zinc-50" />}
-        {props.children}
-        {iconPosition === 'right' && <Icon className="h-5 w-5 text-zinc-50" />}
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            {iconPosition === 'left' && (
+              <Icon className="h-5 w-5 text-zinc-50" />
+            )}
+            {props.children}
+            {iconPosition === 'right' && (
+              <Icon className="h-5 w-5 text-zinc-50" />
+            )}
+          </>
+        )}
       </Comp>
     )
   },

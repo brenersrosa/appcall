@@ -66,6 +66,7 @@ model UserTimeInterval {
   week_day              Int
   time_start_in_minutes Int
   time_end_in_minutes   Int
+  meet_duration         Int
 
   user_id String
   user    User   @relation(fields: [user_id], references: [id])
