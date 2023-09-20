@@ -7,7 +7,6 @@ import { prisma } from '../../../lib/prisma'
 import { buildNextAuthOptions } from '../auth/[...nextauth]'
 
 const timeIntervalsBodySchema = z.object({
-  meetDuration: z.number().min(10).max(180).optional(),
   intervals: z.array(
     z.object({
       weekDay: z.number(),

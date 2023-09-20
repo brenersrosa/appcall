@@ -12,9 +12,13 @@ import { Button } from '@/components/ui/Button'
 import { Heading } from '@/components/ui/Heading'
 import { MultiStepVertical } from '@/components/ui/MultiStepVertical'
 import { Text } from '@/components/ui/Text'
+import { Textarea } from '@/components/ui/Textarea'
 
 import { steps } from '@/utils/register-form-steps'
-import { Textarea } from '@/components/ui/Textarea'
+
+import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth]'
+
+import { api } from '@/lib/axios'
 
 const updateProfileSchema = z.object({
   bio: z.string(),
@@ -36,10 +40,10 @@ export default function UpdateProfile() {
   const router = useRouter()
 
   async function handleUpdateProfile(data: UpdateProfileData) {
-    // await api.put('/users/profile', {
-    //   bio: data.bio,
-    // })
-    // await router.push(`/schedule/${session.data?.user.username}`)
+    await api.put('/users/profile', {
+      bio: data.bio,
+    })
+    await router.push(`/schedule/${session.data?.user.username}`)
   }
 
   return (
@@ -59,7 +63,11 @@ export default function UpdateProfile() {
           </Text>
         </div>
 
-        <Box className="flex-col">
+        <Box
+          as="form"
+          onSubmit={handleSubmit(handleUpdateProfile)}
+          className="flex-col"
+        >
           <Textarea
             label="Sobre você"
             placeholder="Fale um pouco sobre você. Isto será exibido em sua página pessoal."
@@ -67,7 +75,12 @@ export default function UpdateProfile() {
             totalCharacters={watch('bio') ? watch('bio').length : 0}
           />
 
-          <Button type="submit" icon={CaretRight} disabled={isSubmitting}>
+          <Button
+            type="submit"
+            icon={CaretRight}
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
+          >
             Finalizar
           </Button>
         </Box>
@@ -76,16 +89,16 @@ export default function UpdateProfile() {
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-//   const session = await getServerSession(
-//     req,
-//     res,
-//     buildNextAuthOptions(req, res),
-//   )
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getServerSession(
+    req,
+    res,
+    buildNextAuthOptions(req, res),
+  )
 
-//   return {
-//     props: {
-//       session,
-//     },
-//   }
-// }
+  return {
+    props: {
+      session,
+    },
+  }
+}
