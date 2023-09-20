@@ -42,27 +42,37 @@ export default async function handler(
     auth: await getGoogleOAuthToken(user.id),
   })
 
-  const newCalendar = {
-    summary: 'appcall',
-    description: 'Calendar with appointments from appcall application',
-    backgroundColor: '#8B5CF6',
-  }
+  const calendarList = await calendar.calendarList.list()
+
+  const calendarExists = calendarList.data.items?.find(
+    (item) => item.summary === 'appcall',
+  )
 
   let calendarId = null
 
-  await calendar.calendars
-    .insert({
-      requestBody: newCalendar,
-    })
-    .then(
-      function (response) {
-        console.log('Calendar created successfully.', response)
-        calendarId = response.data.id
-      },
-      function (error) {
-        console.log('Error with creating the calendar.', error)
-      },
-    )
+  if (!calendarExists) {
+    const newCalendar = {
+      summary: 'appcall',
+      description: 'Calendar with appointments from appcall application',
+      backgroundColor: '#8B5CF6',
+    }
+
+    await calendar.calendars
+      .insert({
+        requestBody: newCalendar,
+      })
+      .then(
+        function (response) {
+          console.log('Calendar created successfully.', response)
+          calendarId = response.data.id
+        },
+        function (error) {
+          console.log('Error with creating the calendar.', error)
+        },
+      )
+  } else {
+    calendarId = calendarExists.id
+  }
 
   await prisma.user.update({
     where: {
