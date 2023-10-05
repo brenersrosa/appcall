@@ -19,7 +19,7 @@ const buttonVariants = cva(
         outline:
           'border border-violet-600 bg-transparent hover:bg-violet-600 hover:shadow-violet',
         ghost: 'hover:bg-violet-600 hover:shadow-violet',
-        link: 'text-zinc-50 underline-offset-4 hover:underline',
+        link: 'text-zinc-50 hover:text-violet-500',
         social: 'text-zinc-50',
       },
       size: {

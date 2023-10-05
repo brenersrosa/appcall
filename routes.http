@@ -1,0 +1,7 @@
+# @name send-friend-request
+POST http://localhost:3000/api/users/send-friend-request
+Content-Type: application/json
+
+{
+  "friendId": "6afe6f3e-d4f2-4b6f-a74f-10f6f62fd8a6"
+}

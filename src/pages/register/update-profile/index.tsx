@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { getServerSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { CaretRight } from 'phosphor-react'
@@ -19,8 +19,10 @@ import { steps } from '@/utils/register-form-steps'
 import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth]'
 
 import { api } from '@/lib/axios'
+import { Checkbox } from '@/components/ui/Checkbox'
 
 const updateProfileSchema = z.object({
+  schedulePrivate: z.boolean().default(false),
   bio: z.string(),
 })
 
@@ -29,6 +31,7 @@ type UpdateProfileData = z.infer<typeof updateProfileSchema>
 export default function UpdateProfile() {
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { isSubmitting },
@@ -41,6 +44,7 @@ export default function UpdateProfile() {
 
   async function handleUpdateProfile(data: UpdateProfileData) {
     await api.put('/users/profile', {
+      schedulePrivate: data.schedulePrivate,
       bio: data.bio,
     })
 
@@ -69,6 +73,28 @@ export default function UpdateProfile() {
           onSubmit={handleSubmit(handleUpdateProfile)}
           className="flex-col"
         >
+          <div className="flex items-center gap-3">
+            <Controller
+              name="schedulePrivate"
+              control={control}
+              defaultValue={false}
+              render={({ field }) => {
+                return (
+                  <Checkbox
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked === true)
+                    }}
+                    checked={field.value}
+                  />
+                )
+              }}
+            />
+
+            <Text as="span" className="text-zinc-100">
+              Agenda privada
+            </Text>
+          </div>
+
           <Textarea
             label="Sobre você"
             placeholder="Fale um pouco sobre você. Isto será exibido em sua página pessoal."

@@ -4,6 +4,8 @@ import { Text } from '@/components/ui/Text'
 
 import { prisma } from '@/lib/prisma'
 import { getSession, useSession } from 'next-auth/react'
+import { Header } from '@/components/header'
+import { Widget } from '@/components/ui/Notification/Widget'
 
 interface ScheduleProps {
   user: {
@@ -17,11 +19,17 @@ export default function Dashboard() {
   const session = useSession()
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center gap-6">
-      <Text>dash</Text>
+    <>
+      <Header />
 
-      <span className="text-zinc-300">{session.data?.user.name}</span>
-    </div>
+      <div className="flex h-screen w-full flex-col items-center justify-center gap-6">
+        <Text>dash</Text>
+
+        <span className="text-zinc-300">{session.data?.user.name}</span>
+
+        <Widget />
+      </div>
+    </>
   )
 }
 

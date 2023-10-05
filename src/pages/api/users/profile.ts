@@ -7,6 +7,7 @@ import { buildNextAuthOptions } from '../auth/[...nextauth]'
 import { prisma } from '../../../lib/prisma'
 
 const updateProfileBodySchema = z.object({
+  schedulePrivate: z.boolean().default(false),
   bio: z.string(),
 })
 
@@ -28,7 +29,7 @@ export default async function handler(
     return res.status(401).end()
   }
 
-  const { bio } = updateProfileBodySchema.parse(req.body)
+  const { schedulePrivate, bio } = updateProfileBodySchema.parse(req.body)
 
   const username = session.user.username
 
@@ -47,6 +48,7 @@ export default async function handler(
       id: session.user.id,
     },
     data: {
+      schedule_private: schedulePrivate,
       bio,
     },
   })

@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id          String  @id @default(uuid())
-  username    String  @unique
-  name        String
-  schedule_id String? @db.Text
-  bio         String? @db.Text
-  email       String? @unique
-  avatar_url  String?
+  id               String  @id @default(uuid())
+  schedule_private Boolean @default(false)
+  username         String  @unique
+  name             String
+  schedule_id      String? @db.Text
+  bio              String? @db.Text
+  email            String? @unique
+  avatar_url       String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -26,6 +27,11 @@ model User {
   sessions      Session[]
   timeIntervals UserTimeInterval[]
   Scheduling    Scheduling[]
+
+  userFriends         Friend[]       @relation(name: "users")
+  friendUserFriends   Friend[]       @relation(name: "friend_users")
+  notificationRecieve Notification[] @relation(name: "user_recieve")
+  NotificationSender  Notification[] @relation(name: "user_sender")
 
   @@map("users")
 }
@@ -86,7 +92,51 @@ model Scheduling {
   updated_at DateTime @updatedAt
 
   user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  User    User   @relation(fields: [user_id], references: [id])
 
   @@map("schedulings")
+}
+
+enum FriendStatus {
+  pending
+  accepted
+  rejected
+}
+
+model Friend {
+  id     String       @id @default(uuid())
+  status FriendStatus @default(pending)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_id String
+  user    User   @relation(name: "users", fields: [user_id], references: [id])
+
+  friend_id String
+  friend    User   @relation(name: "friend_users", fields: [friend_id], references: [id])
+
+  @@map("friends")
+}
+
+enum NotificationType {
+  friend_request
+  appointment
+}
+
+model Notification {
+  id      String           @id @default(uuid())
+  type    NotificationType
+  as_read Boolean          @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_id String
+  user    User   @relation(name: "user_recieve", fields: [user_id], references: [id])
+
+  sender_id String
+  sender    User   @relation(name: "user_sender", fields: [sender_id], references: [id])
+
+  @@map("notifications")
 }
