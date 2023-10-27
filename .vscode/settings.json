@@ -3,6 +3,7 @@
     "appcall",
     "hookform",
     "nextauth",
-    "nunito"
+    "nunito",
+    "usuario"
   ]
 }

@@ -1,19 +1,25 @@
+import { GetServerSideProps } from 'next'
 import Image from 'next/image'
-import { CaretRight, GoogleLogo } from 'phosphor-react'
+import { signIn, useSession, getSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { GoogleLogo } from 'phosphor-react'
 
-import { Box } from '@/components/ui/Box'
+import { ClaimUsernameForm } from '@/components/ClaimUsernameForm'
 import { Button } from '@/components/ui/Button'
 import { Heading } from '@/components/ui/Heading'
-import { Input } from '@/components/ui/Input'
 import { Text } from '@/components/ui/Text'
 
 import logoImg from '@/assets/logo.svg'
 import heroImg from '@/assets/hero.svg'
-import { ClaimUsernameForm } from '@/components/ClaimUsernameForm'
 
 export default function Home() {
-  function handleClick() {
-    console.log('ok')
+  const session = useSession()
+  const router = useRouter()
+
+  async function handleSignIn() {
+    await signIn('google')
+
+    await router.push(`/dashboard/${session.data?.user.username}`)
   }
 
   return (
@@ -46,6 +52,7 @@ export default function Home() {
             iconPosition="left"
             variant="social"
             color="red"
+            onClick={handleSignIn}
           >
             Entrar com o Google
           </Button>
@@ -57,4 +64,32 @@ export default function Home() {
       </div>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const session = await getSession(context)
+
+    if (session) {
+      return {
+        redirect: {
+          destination: `/dashboard/${session.user.username}`,
+          permanent: false,
+        },
+      }
+    }
+
+    return {
+      props: {
+        session,
+      },
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    return {
+      props: {
+        session: null,
+      },
+    }
+  }
 }

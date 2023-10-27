@@ -1,11 +1,11 @@
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 
 import { Text } from '@/components/ui/Text'
 
 import { prisma } from '@/lib/prisma'
 import { getSession, useSession } from 'next-auth/react'
 import { Header } from '@/components/header'
-import { Widget } from '@/components/ui/Notification/Widget'
+// import { Widget } from '@/components/ui/Notification/Widget'
 
 interface ScheduleProps {
   user: {
@@ -27,7 +27,7 @@ export default function Dashboard() {
 
         <span className="text-zinc-300">{session.data?.user.name}</span>
 
-        <Widget />
+        {/* <Widget /> */}
       </div>
     </>
   )
@@ -86,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     }
   } catch (error) {
-    console.error('Error fetching characters:', error)
+    console.error('Error fetching data:', error)
     return {
       props: {
         session: null,

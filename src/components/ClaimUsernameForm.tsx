@@ -49,6 +49,7 @@ export function ClaimUsernameForm() {
         className="w-full"
         autoFocus
         {...register('username')}
+        error={errors.username}
       />
 
       <Button

@@ -1,9 +1,21 @@
 import { NextApiRequest, NextApiResponse, NextPageContext } from 'next'
 import { NextAuthOptions } from 'next-auth'
+import NextAuth from 'next-auth/next'
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
 
 import { PrismaAdapter } from '@/lib/auth/prisma-adapter'
-import NextAuth from 'next-auth/next'
+import { prisma } from '@/lib/prisma'
+
+const scopeForRegistration = [
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile',
+  'https://www.googleapis.com/auth/calendar',
+].join(' ')
+
+const scopeForLogin = [
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile',
+].join(' ')
 
 export function buildNextAuthOptions(
   req: NextApiRequest | NextPageContext['req'],
@@ -20,8 +32,7 @@ export function buildNextAuthOptions(
             prompt: 'consent',
             access_type: 'offline',
             response_type: 'code',
-            scope:
-              'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar',
+            scope: scopeForRegistration,
           },
         },
         profile(profile: GoogleProfile) {
@@ -41,7 +52,31 @@ export function buildNextAuthOptions(
       secret: process.env.NEXTAUTH_SECRET,
     },
     callbacks: {
-      async signIn({ account }) {
+      async signIn({ account, user }) {
+        // const userExists = await prisma.user.findUnique({
+        //   where: {
+        //     email: user.email,
+        //   },
+        // })
+
+        // const userWithRefreshToken = await prisma.account.findFirst({
+        //   where: {
+        //     user: {
+        //       email: user.email,
+        //     },
+        //   },
+        //   select: {
+        //     refresh_token: true,
+        //   },
+        // })
+
+        // if (!userWithRefreshToken) {
+        //   if (account) {
+        //     account.scope = `${account.scope} https://www.googleapis.com/auth/calendar`
+        //   }
+        //   scopeForLogin.push('https://www.googleapis.com/auth/calendar')
+        // }
+
         if (
           !account?.scope?.includes('https://www.googleapis.com/auth/calendar')
         ) {

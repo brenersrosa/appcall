@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/Input'
 import { MultiStepVertical } from '@/components/ui/MultiStepVertical'
 import { Text } from '@/components/ui/Text'
 
+import { useToast } from '@/contexts/ToastContext'
+
 import { api } from '@/lib/axios'
 
 import { steps } from '@/utils/register-form-steps'
@@ -46,7 +48,7 @@ export default function Register() {
 
   const searchParams = useSearchParams()
 
-  // const { showToast } = useToast()
+  const { showToast } = useToast()
 
   useEffect(() => {
     if (searchParams.get('username')) {
@@ -68,7 +70,7 @@ export default function Register() {
       if (err instanceof AxiosError && err?.response?.data) {
         console.log(err.response.data)
 
-        // showToast('Falha!', 'Este usuário já existe.', 'error')
+        showToast('Falha!', 'Este usuário já existe.', 'error')
 
         return
       }
@@ -111,6 +113,7 @@ export default function Register() {
             placeholder="Seu nome completo"
             {...register('name')}
             error={errors.name}
+            autoFocus
           />
 
           <Button type="submit" icon={CaretRight}>
