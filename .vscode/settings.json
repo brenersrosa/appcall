@@ -3,7 +3,11 @@
     "appcall",
     "hookform",
     "nextauth",
+<<<<<<< HEAD
     "nunito",
     "usuario"
+=======
+    "nunito"
+>>>>>>> origin/main
   ]
 }
