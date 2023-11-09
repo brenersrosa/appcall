@@ -11,7 +11,6 @@ import { Text } from '@/components/ui/Text'
 
 import logoImg from '@/assets/logo.svg'
 import heroImg from '@/assets/hero.svg'
-import { ClaimUsernameForm } from '@/components/ClaimUsernameForm'
 
 export default function Home() {
   const session = useSession()

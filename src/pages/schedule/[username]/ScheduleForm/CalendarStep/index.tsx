@@ -71,7 +71,7 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
         'relative mx-auto mb-0 grid max-w-full divide-x divide-zinc-700 rounded-lg border border-zinc-700 bg-zinc-800',
         {
           'w-[540px] grid-cols-1': isDateSelected === false,
-          'lg:grid-cols-custom grid-cols-1': isDateSelected === true,
+          'grid-cols-1 lg:grid-cols-custom': isDateSelected === true,
         },
       )}
     >

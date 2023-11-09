@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
-import { buildNextAuthOptions } from '../auth/[...nextauth]'
+
+import { buildNextAuthOptions } from '../../auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
 
 const updateFriendRequestStatusBodySchema = z.object({

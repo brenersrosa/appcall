@@ -28,9 +28,9 @@ export function PrismaAdapter(
         },
       })
 
-      destroyCookie({ res }, '@appcall:userId', {
-        path: '/',
-      })
+      // destroyCookie({ res }, '@appcall:userId', {
+      //   path: '/',
+      // })
 
       return {
         id: prismaUser.id,

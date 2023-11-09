@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse, NextPageContext } from 'next'
 import { NextAuthOptions } from 'next-auth'
-<<<<<<< HEAD
 import NextAuth from 'next-auth/next'
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
 
@@ -17,12 +16,6 @@ const scopeForLogin = [
   'https://www.googleapis.com/auth/userinfo.email',
   'https://www.googleapis.com/auth/userinfo.profile',
 ].join(' ')
-=======
-import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
-
-import { PrismaAdapter } from '@/lib/auth/prisma-adapter'
-import NextAuth from 'next-auth/next'
->>>>>>> origin/main
 
 export function buildNextAuthOptions(
   req: NextApiRequest | NextPageContext['req'],
@@ -39,12 +32,7 @@ export function buildNextAuthOptions(
             prompt: 'consent',
             access_type: 'offline',
             response_type: 'code',
-<<<<<<< HEAD
             scope: scopeForRegistration,
-=======
-            scope:
-              'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar',
->>>>>>> origin/main
           },
         },
         profile(profile: GoogleProfile) {
@@ -64,7 +52,6 @@ export function buildNextAuthOptions(
       secret: process.env.NEXTAUTH_SECRET,
     },
     callbacks: {
-<<<<<<< HEAD
       async signIn({ account, user }) {
         // const userExists = await prisma.user.findUnique({
         //   where: {
@@ -90,9 +77,6 @@ export function buildNextAuthOptions(
         //   scopeForLogin.push('https://www.googleapis.com/auth/calendar')
         // }
 
-=======
-      async signIn({ account }) {
->>>>>>> origin/main
         if (
           !account?.scope?.includes('https://www.googleapis.com/auth/calendar')
         ) {

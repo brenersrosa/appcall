@@ -49,10 +49,7 @@ export function ClaimUsernameForm() {
         className="w-full"
         autoFocus
         {...register('username')}
-<<<<<<< HEAD
         error={errors.username}
-=======
->>>>>>> origin/main
       />
 
       <Button

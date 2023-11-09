@@ -1,8 +1,5 @@
 import '@/styles/globals.css'
-<<<<<<< HEAD
 import { QueryClientProvider } from '@tanstack/react-query'
-=======
->>>>>>> origin/main
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 
@@ -26,7 +23,6 @@ export default function App({
     <main
       className={`${exo.variable} ${nunito.variable} bg-zinc-900 font-sans`}
     >
-<<<<<<< HEAD
       <QueryClientProvider client={queryClient}>
         <SessionProvider session={session}>
           <ToastProvider>
@@ -34,11 +30,6 @@ export default function App({
           </ToastProvider>
         </SessionProvider>
       </QueryClientProvider>
-=======
-      <SessionProvider session={session}>
-        <Component {...pageProps} />
-      </SessionProvider>
->>>>>>> origin/main
     </main>
   )
 }
