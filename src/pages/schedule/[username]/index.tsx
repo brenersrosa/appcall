@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
+import clsx from 'clsx'
 
 import ScheduleForm from './ScheduleForm'
-import { Button } from '@/components/ui/Button'
 import { Header } from '@/components/schedule/Header'
 import { Heading } from '@/components/ui/Heading'
 import { Text } from '@/components/ui/Text'
@@ -11,8 +11,7 @@ import { Text } from '@/components/ui/Text'
 import { prisma } from '@/lib/prisma'
 
 import { api } from '@/lib/axios'
-import { cn } from '@/lib/utils'
-import clsx from 'clsx'
+import { FriendStatus } from '@prisma/client'
 
 interface ScheduleProps {
   user: {
@@ -25,15 +24,27 @@ interface ScheduleProps {
   userLoggedIn: {
     id: string
   }
-  friendStatus: 'none' | 'pending' | 'accepted' | 'rejected'
+  friend: {
+    id: string
+    userId: string
+    friendId: string
+    status: FriendStatus
+  }
 }
 
 export default function Schedule({
   user,
   userLoggedIn,
-  friendStatus,
+  friend,
 }: ScheduleProps) {
-  const [friendlyStatus, setFriendlyStatus] = useState(friendStatus)
+  const [friendlyStatus, setFriendlyStatus] = useState<FriendStatus | null>(
+    friend.status,
+  )
+  const [asFriend, setAsFriend] = useState(false)
+
+  useEffect(() => {
+    friendlyStatus === 'accepted' ? setAsFriend(true) : setAsFriend(false)
+  }, [asFriend, friendlyStatus])
 
   async function handleSendFriendRequest() {
     try {
@@ -56,7 +67,22 @@ export default function Schedule({
       )
 
       if (response.status === 200) {
-        setFriendlyStatus('none')
+        setFriendlyStatus(null)
+      }
+    } catch (error) {
+      console.log('ERROR | Error remove friend request.')
+    }
+  }
+
+  async function handleUpdateFriendRequest() {
+    try {
+      const response = await api.put(`/users/friend-request/update`, {
+        friendId: user.id,
+        action: 'accept',
+      })
+
+      if (response.status === 200) {
+        setFriendlyStatus('accepted')
       }
     } catch (error) {
       console.log('ERROR | Error remove friend request.')
@@ -70,7 +96,14 @@ export default function Schedule({
 
         <button
           onClick={
-            friendlyStatus === 'accepted' || friendlyStatus === 'pending'
+            friendlyStatus === 'pending' &&
+            (friend.friendId === userLoggedIn.id ||
+              friend.userId === userLoggedIn.id)
+              ? handleUpdateFriendRequest
+              : ((friendlyStatus === 'pending' ||
+                  friendlyStatus === 'accepted') &&
+                  friend.userId === userLoggedIn.id) ||
+                friend.friendId === userLoggedIn.id
               ? handleRemoveFriendRequest
               : handleSendFriendRequest
           }
@@ -78,15 +111,20 @@ export default function Schedule({
             'h-12 min-w-[198px] items-center justify-center gap-2 rounded-md bg-violet-500 font-medium text-zinc-50 transition-all disabled:pointer-events-none disabled:bg-zinc-600/70',
             friendlyStatus === 'accepted'
               ? "border border-zinc-700 bg-zinc-900 after:content-['Amigos'] hover:border-none hover:bg-red-600 hover:shadow-red hover:after:content-['Remover_amizade']"
-              : friendlyStatus === 'pending'
+              : friendlyStatus === 'pending' &&
+                friend.userId === userLoggedIn.id
               ? "after:content-['Solicitação_enviada'] hover:bg-red-600 hover:shadow-red hover:after:content-['Cancelar_envio']"
+              : friendlyStatus === 'pending' &&
+                friend.friendId === userLoggedIn.id
+              ? "after:content-['Solicitação_recebida'] hover:after:content-['Aceitar_solicitação']"
               : "after:content-['Enviar_solicitação'] hover:bg-violet-600 hover:shadow-violet",
           )}
         />
       </div>
 
       {(user.schedulePrivate === true && friendlyStatus === 'accepted') ||
-      user.schedulePrivate === false ? (
+      user.schedulePrivate === false ||
+      asFriend === true ? (
         <ScheduleForm />
       ) : (
         <div className="my-4 flex flex-1 flex-col items-center justify-center gap-2">
@@ -140,7 +178,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       userLoggedIn: {
         id: userLoggedIn?.id,
       },
-      friendStatus: friend ? friend.status : '',
+      friend: {
+        id: friend ? friend?.id : '',
+        userId: friend ? friend?.user_id : '',
+        friendId: friend ? friend?.friend_id : '',
+        status: friend ? friend.status : 'rejected',
+      },
     },
   }
 }
