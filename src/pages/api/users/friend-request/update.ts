@@ -57,6 +57,8 @@ export default async function handler(
         as_read: true,
       },
     })
+
+    return res.status(200).end()
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json({ message: 'Invalid request data.' })
