@@ -226,6 +226,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
+  if (user.username === userLoggedIn?.username) {
+    return {
+      redirect: {
+        destination: `/dashboard/${userLoggedIn.username}`,
+        permanent: false,
+      },
+    }
+  }
+
   const friend = await prisma.friend.findFirst({
     where: {
       OR: [
