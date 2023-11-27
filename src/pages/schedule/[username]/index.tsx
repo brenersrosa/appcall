@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 
@@ -52,6 +52,8 @@ export default function Schedule({
     friend.status,
   )
   const [isLoading, setIsLoading] = useState(false)
+  const [isSender, setIsSender] = useState(false)
+  const [isReceiver, setIsReceiver] = useState(false)
 
   const isFriend = useMemo(
     () => friendStatus === FriendStatus.ACCEPTED,
@@ -67,7 +69,11 @@ export default function Schedule({
           response = await api.post('/users/friend-request/create', {
             friendId: user?.id,
           })
-          if (response.status === 201) setFriendStatus(FriendStatus.PENDING)
+          if (response.status === 201) {
+            setFriendStatus(FriendStatus.PENDING)
+            setIsSender(true)
+            setIsReceiver(false)
+          }
           setIsLoading(false)
           break
 
@@ -98,17 +104,13 @@ export default function Schedule({
     }
   }
 
-  const { isSender, isReceiver } = useMemo(() => {
+  useEffect(() => {
     if (friend.userId === userLoggedIn.id) {
-      return {
-        isSender: true,
-        isReceiver: false,
-      }
-    }
-
-    return {
-      isSender: false,
-      isReceiver: true,
+      setIsSender(true)
+      setIsReceiver(false)
+    } else {
+      setIsSender(false)
+      setIsReceiver(true)
     }
   }, [friend, userLoggedIn])
 
@@ -117,44 +119,17 @@ export default function Schedule({
       <div className="flex flex-col items-center justify-center gap-4">
         <Header user={user} />
 
-        {/* <button
-          onClick={() =>
-            handleFriendAction(
-              isFriend
-                ? FriendAction.REMOVE_FRIEND
-                : friendStatus === FriendStatus.PENDING && isSender
-                ? FriendAction.REMOVE_FRIEND
-                : friendStatus === FriendStatus.PENDING && isReceiver === true
-                ? FriendAction.ACCEPT_REQUEST
-                : FriendAction.SEND_REQUEST,
-            )
-          }
-          className={clsx(
-            'h-12 min-w-[198px] items-center justify-center gap-2 rounded-md bg-violet-500 font-medium text-zinc-50 transition-all disabled:pointer-events-none disabled:bg-zinc-600/70',
-            isFriend
-              ? "border border-zinc-700 bg-zinc-900 after:content-['Amigos'] hover:border-none hover:bg-red-600 hover:shadow-red hover:after:content-['Remover_amizade']"
-              : friendStatus === FriendStatus.PENDING &&
-                isSender === true &&
-                isReceiver === false
-              ? "after:content-['Solicitação_enviada'] hover:bg-red-600 hover:shadow-red hover:after:content-['Cancelar_envio']"
-              : friendStatus === FriendStatus.PENDING &&
-                isSender === false &&
-                isReceiver === true
-              ? "after:content-['Solicitação_recebida'] hover:after:content-['Aceitar_solicitação']"
-              : "after:content-['Enviar_solicitação'] hover:bg-violet-600 hover:shadow-violet",
-          )}
-          disabled={isLoading}
-        >
-          {isLoading ? <Loading /> : ''}
-        </button> */}
-
         <Button
           hoverText={
             isFriend
               ? 'Remover amizade'
-              : friendStatus === FriendStatus.PENDING && isSender && !isReceiver
+              : friendStatus === FriendStatus.PENDING &&
+                !!isSender &&
+                !isReceiver
               ? 'Cancelar envio'
-              : friendStatus === FriendStatus.PENDING && !isSender && isReceiver
+              : friendStatus === FriendStatus.PENDING &&
+                !isSender &&
+                !!isReceiver
               ? 'Aceitar solicitação'
               : 'Enviar solicitação'
           }
@@ -178,13 +153,9 @@ export default function Schedule({
         >
           {isFriend
             ? 'Amigos'
-            : friendStatus === FriendStatus.PENDING &&
-              isSender === false &&
-              isReceiver === true
+            : friendStatus === FriendStatus.PENDING && !isSender && !!isReceiver
             ? 'Solicitação recebida'
-            : friendStatus === FriendStatus.PENDING &&
-              isSender === true &&
-              isReceiver === false
+            : friendStatus === FriendStatus.PENDING && !!isSender && !isReceiver
             ? 'Solicitação enviada'
             : 'Enviar solicitação'}
         </Button>
