@@ -43,6 +43,7 @@ export interface ButtonProps
   iconPosition?: 'left' | 'right'
   color?: string
   isLoading?: boolean
+  hoverText?: string
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -56,6 +57,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       iconPosition = 'right',
       color,
       isLoading = false,
+      hoverText = '',
       ...props
     },
     ref,
@@ -70,6 +72,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const isDisabledClass = isLoading ? 'pointer-events-none' : ''
 
+    const [isHovered, setIsHovered] = React.useState(false)
+
     return (
       <Comp
         className={cn(
@@ -78,6 +82,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           hoverClass,
           isDisabledClass,
         )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         ref={ref}
         {...props}
       >
@@ -88,7 +94,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {iconPosition === 'left' && (
               <Icon className="h-5 w-5 text-zinc-50" />
             )}
-            {props.children}
+            {isHovered && hoverText && hoverText}
+            {!isHovered && props.children}
             {iconPosition === 'right' && (
               <Icon className="h-5 w-5 text-zinc-50" />
             )}
