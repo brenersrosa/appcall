@@ -1,18 +1,36 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import clsx from 'clsx'
 import { X } from 'phosphor-react'
 
 import { Calendar } from '@/components/ui/Calendar'
-import { CalendarStepButton } from '@/components/schedule/CalendarStep/Button'
 
 import { api } from '@/lib/axios'
+import { Text } from '@/components/ui/Text'
+import { Heading } from '@/components/ui/Heading'
 
-interface Availability {
-  possibleTimes: number[]
-  availableTimes: number[]
+interface Appointment {
+  id: string
+  date: string
+  name: string
+  email: string
+  phone: string
+  observations: string
+  created_at: string
+  updated_at: string
+  user_id: string
+  creator_id: string
+  creator: {
+    name: string
+    avatar_url: string
+  }
+}
+
+interface UpcomingAppointment {
+  appointments: Appointment[]
 }
 
 interface CalendarStepProps {
@@ -36,10 +54,10 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
     ? dayjs(selectedDate).format('YYYY-MM-DD')
     : null
 
-  const { data: availability } = useQuery<Availability>(
-    ['availability', selectedDateWithoutTime],
+  const { data: upcomingAppointments } = useQuery<UpcomingAppointment>(
+    ['upcomingAppointments', selectedDateWithoutTime],
     async () => {
-      const response = await api.get(`/users/${username}/availability`, {
+      const response = await api.get(`/users/${username}/list-appointments`, {
         params: {
           date: selectedDateWithoutTime,
         },
@@ -48,20 +66,9 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
       return response.data
     },
     {
-      enabled: !!selectedDate,
+      enabled: !!selectedDateWithoutTime,
     },
   )
-
-  console.log(availability)
-
-  function handleSelectTime(hour: number) {
-    const dateWithTime = dayjs(selectedDate)
-      .set('hour', hour)
-      .startOf('hour')
-      .toDate()
-
-    onSelectDateTime(dateWithTime)
-  }
 
   function handleCloseModal() {
     setSelectedDate(null)
@@ -94,19 +101,32 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
               <X className="h-5 w-5 text-zinc-200" />
             </button>
           </div>
-          <div className="absolute bottom-0 right-0 top-14 mt-4 flex w-80 flex-col gap-3 overflow-y-scroll px-6 py-2">
+          <div className="absolute bottom-0 right-0 top-14 mt-4 flex w-80 flex-col gap-3 overflow-y-scroll p-4">
             <div className="w-full grid-cols-2 gap-2 lg:grid lg:grid-cols-1">
-              {availability?.possibleTimes.map((hour) => {
-                return (
-                  <CalendarStepButton
-                    key={hour}
-                    onClick={() => handleSelectTime(hour)}
-                    disabled={!availability.availableTimes.includes(hour)}
+              {upcomingAppointments ? (
+                upcomingAppointments.appointments.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="flex flex-1 items-center justify-between gap-2 rounded-md border border-zinc-800 bg-zinc-700/75 px-4 py-2"
                   >
-                    {String(hour).padStart(2, '0')}:00h
-                  </CalendarStepButton>
-                )
-              })}
+                    <div className="flex flex-col gap-2">
+                      <Text>{dayjs(appointment.date).format('HH:mm')}h</Text>
+                      <Text size="lg" className="font-bold">
+                        {appointment.name}
+                      </Text>
+                    </div>
+                    <Image
+                      className="rounded-full"
+                      src={appointment.creator.avatar_url}
+                      alt={appointment.name}
+                      width={40}
+                      height={40}
+                    />
+                  </div>
+                ))
+              ) : (
+                <p>No upcoming appointments.</p>
+              )}
             </div>
           </div>
         </div>

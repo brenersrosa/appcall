@@ -1,71 +1,71 @@
+import { useState } from 'react'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
+import { getSession } from 'next-auth/react'
+import { useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 
-import { Text } from '@/components/ui/Text'
-
-import { prisma } from '@/lib/prisma'
-import { getSession, useSession } from 'next-auth/react'
 import { Header } from '@/components/header'
-// import { Widget } from '@/components/ui/Notification/Widget'
+import { Calendar } from '@/components/ui/Calendar'
 
-interface ScheduleProps {
-  user: {
-    name: string
-    bio: string
-    avatarUrl: string
-  }
+import { api } from '@/lib/axios'
+import DashboardForm from './DashboardForm'
+
+interface Appointment {
+  id: string
+  date: string
+  name: string
+  email: string
+  phone: string
+  observations: string
+  created_at: string
+  updated_at: string
+  user_id: string
+  creator_id: string
+}
+
+interface UpcomingAppointment {
+  appointments: Appointment[]
 }
 
 export default function Dashboard() {
-  const session = useSession()
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+  const router = useRouter()
+  const username = String(router.query.username)
+
+  const selectedDateWithoutTime = selectedDate
+    ? dayjs(selectedDate).format('YYYY-MM-DD')
+    : null
+
+  const { data: upcomingAppointments } = useQuery<UpcomingAppointment>(
+    ['upcomingAppointments', selectedDateWithoutTime],
+    async () => {
+      const response = await api.get(`/users/${username}/list-appointments`, {
+        params: {
+          date: selectedDateWithoutTime,
+        },
+      })
+
+      return response.data
+    },
+    {
+      enabled: !!selectedDateWithoutTime,
+    },
+  )
+
+  console.log(upcomingAppointments)
 
   return (
     <>
       <Header />
 
-      <div className="flex h-screen w-full flex-col items-center justify-center gap-6">
-        <Text>dash</Text>
-
-        <span className="text-zinc-300">{session.data?.user.name}</span>
-
-        {/* <Widget /> */}
+      <div className="mx-auto mb-4 mt-20 flex max-w-[852px] flex-col gap-6 px-4">
+        <DashboardForm />
       </div>
     </>
   )
 }
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   return {
-//     paths: [],
-//     fallback: 'blocking',
-//   }
-// }
-
-// export const getStaticProps: GetStaticProps = async ({ params }) => {
-//   const username = String(params?.username)
-
-//   const user = await prisma.user.findUnique({
-//     where: {
-//       username,
-//     },
-//   })
-
-//   if (!user) {
-//     return {
-//       notFound: true,
-//     }
-//   }
-
-//   return {
-//     props: {
-//       user: {
-//         name: user.name,
-//         bio: user.bio,
-//         avatarUrl: user.avatar_url,
-//       },
-//     },
-//     revalidate: 60 * 60 * 24, // 1 day
-//   }
-// }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
