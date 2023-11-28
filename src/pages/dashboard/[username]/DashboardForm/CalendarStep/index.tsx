@@ -103,8 +103,13 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
           </div>
           <div className="absolute bottom-0 right-0 top-14 mt-4 flex w-80 flex-col gap-3 overflow-y-scroll p-4">
             <div className="w-full grid-cols-2 gap-2 lg:grid lg:grid-cols-1">
-              {upcomingAppointments ? (
-                upcomingAppointments.appointments.map((appointment) => (
+              {upcomingAppointments?.appointments.length === 0 ? (
+                <div className="mt-4 flex h-full flex-1 flex-col items-center justify-center gap-4">
+                  <Heading size="lg">👀</Heading>
+                  <Text>Aparentemente tudo está calmo...</Text>
+                </div>
+              ) : (
+                upcomingAppointments?.appointments.map((appointment) => (
                   <div
                     key={appointment.id}
                     className="flex flex-1 items-center justify-between gap-2 rounded-md border border-zinc-800 bg-zinc-700/75 px-4 py-2"
@@ -124,8 +129,6 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
                     />
                   </div>
                 ))
-              ) : (
-                <p>No upcoming appointments.</p>
               )}
             </div>
           </div>
