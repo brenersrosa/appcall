@@ -94,8 +94,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {iconPosition === 'left' && (
               <Icon className="h-5 w-5 text-zinc-50" />
             )}
-            {isHovered && hoverText && hoverText}
-            {!isHovered && props.children}
+            {isHovered && hoverText ? hoverText : props.children}
             {iconPosition === 'right' && (
               <Icon className="h-5 w-5 text-zinc-50" />
             )}

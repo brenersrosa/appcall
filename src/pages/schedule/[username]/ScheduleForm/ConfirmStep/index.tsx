@@ -13,8 +13,10 @@ import { Button } from '@/components/ui/Button'
 import { api } from '@/lib/axios'
 
 import { useToast } from '@/contexts/ToastContext'
+import { useSession } from 'next-auth/react'
 
 const confirmStepSchema = z.object({
+  creator: z.string().uuid(),
   name: z
     .string()
     .min(3, { message: 'O nome precisa ter pelo menos 3 caracteres.' }),
@@ -36,6 +38,9 @@ export default function ConfirmStep({
 }: ConfirmStepProps) {
   const { showToast } = useToast()
 
+  const session = useSession()
+  const user = session.data?.user
+
   const {
     register,
     handleSubmit,
@@ -44,6 +49,9 @@ export default function ConfirmStep({
   } = useForm<ConfirmStepData>({
     resolver: zodResolver(confirmStepSchema),
     defaultValues: {
+      creator: user?.id,
+      name: user?.name,
+      email: user?.email,
       phone: '',
     },
   })
@@ -58,10 +66,11 @@ export default function ConfirmStep({
   )
 
   async function handleConfirmScheduling(data: ConfirmStepData) {
-    const { name, email, phone, observations } = data
+    const { creator, name, email, phone, observations } = data
 
     await api
       .post(`/users/${username}/schedule`, {
+        creator,
         name,
         email,
         phone,

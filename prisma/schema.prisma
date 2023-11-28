@@ -26,12 +26,13 @@ model User {
   accounts      Account[]
   sessions      Session[]
   timeIntervals UserTimeInterval[]
-  Scheduling    Scheduling[]
 
+  userScheduling      Scheduling[]   @relation(name: "user")
+  creatorScheduling   Scheduling[]   @relation(name: "creator")
   userFriends         Friend[]       @relation(name: "users")
   friendUserFriends   Friend[]       @relation(name: "friend_users")
   notificationRecieve Notification[] @relation(name: "user_recieve")
-  NotificationSender  Notification[] @relation(name: "user_sender")
+  notificationSender  Notification[] @relation(name: "user_sender")
 
   @@map("users")
 }
@@ -92,7 +93,10 @@ model Scheduling {
   updated_at DateTime @updatedAt
 
   user_id String
-  User    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user    User   @relation(name: "user", fields: [user_id], references: [id], onDelete: Cascade)
+
+  creator_id String
+  creator    User   @relation(name: "creator", fields: [creator_id], references: [id], onDelete: Cascade)
 
   @@map("schedulings")
 }

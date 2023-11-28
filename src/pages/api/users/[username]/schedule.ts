@@ -27,6 +27,7 @@ export default async function handle(
   }
 
   const createSchedulingBody = z.object({
+    creator: z.string().uuid(),
     name: z.string(),
     email: z.string(),
     phone: z.string(),
@@ -34,9 +35,8 @@ export default async function handle(
     date: z.string().datetime(),
   })
 
-  const { name, email, phone, observations, date } = createSchedulingBody.parse(
-    req.body,
-  )
+  const { creator, name, email, phone, observations, date } =
+    createSchedulingBody.parse(req.body)
 
   const schedulingDate = dayjs(date).startOf('hour')
 
@@ -61,6 +61,7 @@ export default async function handle(
 
   const scheduling = await prisma.scheduling.create({
     data: {
+      creator_id: creator,
       name,
       email,
       phone,
