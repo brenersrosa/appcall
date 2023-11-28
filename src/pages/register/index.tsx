@@ -63,8 +63,6 @@ export default function Register() {
         name: data.name,
       })
 
-      console.log(data)
-
       await router.push('/register/connect-calendar')
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data) {
@@ -74,7 +72,7 @@ export default function Register() {
 
         return
       }
-      console.log(err)
+      console.log('ERROR | ', err)
     }
   }
 

@@ -34,6 +34,8 @@ interface ScheduleProps {
   }
   userLoggedIn: {
     id: string
+    name: string
+    email: string
   }
   friend: {
     id: string
@@ -165,7 +167,7 @@ export default function Schedule({
         friendStatus === FriendStatus.ACCEPTED) ||
       user.schedulePrivate === false ||
       isFriend === true ? (
-        <ScheduleForm />
+        <ScheduleForm {...userLoggedIn} />
       ) : (
         <div className="my-4 flex flex-1 flex-col items-center justify-center gap-2">
           <Heading size="lg">Ops!</Heading>
@@ -226,6 +228,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       userLoggedIn: {
         id: userLoggedIn?.id,
+        name: userLoggedIn?.name,
+        email: userLoggedIn?.email,
       },
       friend: {
         id: friend ? friend?.id : '',

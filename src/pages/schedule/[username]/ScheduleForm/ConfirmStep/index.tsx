@@ -13,7 +13,10 @@ import { Button } from '@/components/ui/Button'
 import { api } from '@/lib/axios'
 
 import { useToast } from '@/contexts/ToastContext'
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { prisma } from '@/lib/prisma'
+import { GetServerSideProps } from 'next'
 
 const confirmStepSchema = z.object({
   creator: z.string().uuid(),
@@ -27,19 +30,24 @@ const confirmStepSchema = z.object({
 
 type ConfirmStepData = z.infer<typeof confirmStepSchema>
 
+interface UserLoggedInProps {
+  id?: string
+  name: string
+  email: string
+}
+
 interface ConfirmStepProps {
   schedulingDate: Date
   onReturnToCalendar: () => void
+  userLoggedIn: UserLoggedInProps
 }
 
 export default function ConfirmStep({
   schedulingDate,
   onReturnToCalendar,
+  userLoggedIn,
 }: ConfirmStepProps) {
   const { showToast } = useToast()
-
-  const session = useSession()
-  const user = session.data?.user
 
   const {
     register,
@@ -49,9 +57,9 @@ export default function ConfirmStep({
   } = useForm<ConfirmStepData>({
     resolver: zodResolver(confirmStepSchema),
     defaultValues: {
-      creator: user?.id,
-      name: user?.name,
-      email: user?.email,
+      creator: userLoggedIn?.id,
+      name: userLoggedIn?.name,
+      email: userLoggedIn?.email,
       phone: '',
     },
   })
@@ -83,7 +91,7 @@ export default function ConfirmStep({
         onReturnToCalendar()
       })
       .catch((err) => {
-        console.log(err)
+        console.log('ERROR | ', err)
       })
   }
 
@@ -151,7 +159,7 @@ export default function ConfirmStep({
             Cancelar
           </Button>
 
-          <Button type="submit" disabled={isSubmitting} className="w-full">
+          <Button type="submit" isLoading={isSubmitting} className="w-full">
             Confirmar
           </Button>
         </div>

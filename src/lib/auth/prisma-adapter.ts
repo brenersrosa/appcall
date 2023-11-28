@@ -20,7 +20,7 @@ export function PrismaAdapter(
           id: userIdOnCookies,
         },
         data: {
-          name: user.name,
+          // name: user.name,
           email: user.email,
           avatar_url: user.avatar_url,
           bio: user.bio,
@@ -28,9 +28,9 @@ export function PrismaAdapter(
         },
       })
 
-      // destroyCookie({ res }, '@appcall:userId', {
-      //   path: '/',
-      // })
+      destroyCookie({ res }, '@appcall:userId', {
+        path: '/',
+      })
 
       return {
         id: prismaUser.id,
@@ -130,7 +130,7 @@ export function PrismaAdapter(
           id: user.id,
         },
         data: {
-          name: user.name,
+          // name: user.name,
           email: user.email,
           avatar_url: user.avatar_url,
           bio: user.bio,

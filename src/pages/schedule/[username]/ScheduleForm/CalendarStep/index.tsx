@@ -52,8 +52,6 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
     },
   )
 
-  console.log(availability)
-
   function handleSelectTime(hour: number) {
     const dateWithTime = dayjs(selectedDate)
       .set('hour', hour)
