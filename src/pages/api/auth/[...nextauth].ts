@@ -38,7 +38,7 @@ export function buildNextAuthOptions(
         profile(profile: GoogleProfile) {
           return {
             id: profile.sub,
-            name: profile.name,
+            name: '',
             username: '',
             email: profile.email,
             avatar_url: profile.picture,

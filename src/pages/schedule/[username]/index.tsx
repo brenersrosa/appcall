@@ -34,6 +34,8 @@ interface ScheduleProps {
   }
   userLoggedIn: {
     id: string
+    name: string
+    email: string
   }
   friend: {
     id: string
@@ -117,37 +119,6 @@ export default function Schedule({
       <div className="flex flex-col items-center justify-center gap-4">
         <Header user={user} />
 
-        {/* <button
-          onClick={() =>
-            handleFriendAction(
-              isFriend
-                ? FriendAction.REMOVE_FRIEND
-                : friendStatus === FriendStatus.PENDING && isSender
-                ? FriendAction.REMOVE_FRIEND
-                : friendStatus === FriendStatus.PENDING && isReceiver === true
-                ? FriendAction.ACCEPT_REQUEST
-                : FriendAction.SEND_REQUEST,
-            )
-          }
-          className={clsx(
-            'h-12 min-w-[198px] items-center justify-center gap-2 rounded-md bg-violet-500 font-medium text-zinc-50 transition-all disabled:pointer-events-none disabled:bg-zinc-600/70',
-            isFriend
-              ? "border border-zinc-700 bg-zinc-900 after:content-['Amigos'] hover:border-none hover:bg-red-600 hover:shadow-red hover:after:content-['Remover_amizade']"
-              : friendStatus === FriendStatus.PENDING &&
-                isSender === true &&
-                isReceiver === false
-              ? "after:content-['Solicitação_enviada'] hover:bg-red-600 hover:shadow-red hover:after:content-['Cancelar_envio']"
-              : friendStatus === FriendStatus.PENDING &&
-                isSender === false &&
-                isReceiver === true
-              ? "after:content-['Solicitação_recebida'] hover:after:content-['Aceitar_solicitação']"
-              : "after:content-['Enviar_solicitação'] hover:bg-violet-600 hover:shadow-violet",
-          )}
-          disabled={isLoading}
-        >
-          {isLoading ? <Loading /> : ''}
-        </button> */}
-
         <Button
           hoverText={
             isFriend
@@ -194,7 +165,7 @@ export default function Schedule({
         friendStatus === FriendStatus.ACCEPTED) ||
       user.schedulePrivate === false ||
       isFriend === true ? (
-        <ScheduleForm />
+        <ScheduleForm {...userLoggedIn} />
       ) : (
         <div className="my-4 flex flex-1 flex-col items-center justify-center gap-2">
           <Heading size="lg">Ops!</Heading>
@@ -255,6 +226,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       userLoggedIn: {
         id: userLoggedIn?.id,
+        name: userLoggedIn?.name,
+        email: userLoggedIn?.email,
       },
       friend: {
         id: friend ? friend?.id : '',
