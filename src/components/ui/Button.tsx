@@ -40,6 +40,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   icon?: React.ElementType
+  hoverIcon?: React.ElementType
   iconPosition?: 'left' | 'right'
   color?: string
   isLoading?: boolean
@@ -54,6 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       asChild = false,
       icon: Icon = () => null,
+      hoverIcon: HoverIcon = () => null,
       iconPosition = 'right',
       color,
       isLoading = false,
@@ -91,13 +93,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <Loading />
         ) : (
           <>
-            {iconPosition === 'left' && (
-              <Icon className="h-5 w-5 text-zinc-50" />
-            )}
+            {iconPosition === 'left' &&
+              (isHovered && HoverIcon.length !== 0 ? (
+                <HoverIcon className="h-5 w-5 text-zinc-50" />
+              ) : (
+                <Icon className="h-5 w-5 text-zinc-50" />
+              ))}
             {isHovered && hoverText ? hoverText : props.children}
-            {iconPosition === 'right' && (
-              <Icon className="h-5 w-5 text-zinc-50" />
-            )}
+            {iconPosition === 'right' &&
+              (isHovered && HoverIcon.length !== 0 ? (
+                <HoverIcon className="h-5 w-5 text-zinc-50" />
+              ) : (
+                <Icon className="h-5 w-5 text-zinc-50" />
+              ))}
           </>
         )}
       </Comp>

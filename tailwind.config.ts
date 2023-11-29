@@ -53,6 +53,10 @@ const config: Config = {
       },
       gridTemplateColumns: {
         custom: '1fr 320px',
+        dashboard: '13rem 1fr',
+      },
+      gridTemplateRows: {
+        dashboard: '120px 1fr',
       },
       keyframes: {
         hide: {

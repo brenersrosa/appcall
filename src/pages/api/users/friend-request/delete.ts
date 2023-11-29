@@ -5,8 +5,9 @@ import { buildNextAuthOptions } from '../../auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
 
 const deleteFriendRequestBodySchema = z.object({
-  userLoggedId: z.string().uuid(),
-  friendId: z.string().uuid(),
+  id: z.string().uuid().optional(),
+  userLoggedId: z.string().uuid().optional(),
+  friendId: z.string().uuid().optional(),
 })
 
 export default async function handler(
@@ -27,8 +28,15 @@ export default async function handler(
     return res.status(401).end()
   }
 
-  const userLoggedId = z.string().parse(req.query.userLoggedId)
-  const friendId = z.string().parse(req.query.friendId)
+  const { id, userLoggedId, friendId } = deleteFriendRequestBodySchema.parse(
+    req.query,
+  )
+
+  // const idRequest = z.string().parse(req.query.id)
+  // const userLoggedId = z.string().parse(req.query.userLoggedId)
+  // const friendId = z.string().parse(req.query.friendId)
+
+  console.log(id)
 
   try {
     const friendRequest = await prisma.friend.findFirst({
@@ -39,6 +47,14 @@ export default async function handler(
         ],
       },
     })
+
+    if (id) {
+      await prisma.friend.delete({
+        where: { id },
+      })
+
+      return res.status(200).json({ message: 'Friend request removed.' })
+    }
 
     if (friendRequest) {
       await prisma.friend.delete({

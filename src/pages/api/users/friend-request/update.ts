@@ -6,7 +6,8 @@ import { buildNextAuthOptions } from '../../auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
 
 const updateFriendRequestStatusBodySchema = z.object({
-  friendId: z.string().uuid(),
+  id: z.string().uuid().optional(),
+  friendId: z.string().uuid().optional(),
   action: z.enum(['accept', 'reject']),
 })
 
@@ -31,7 +32,7 @@ export default async function handler(
   const userId = session.user.id
 
   try {
-    const { friendId, action } = updateFriendRequestStatusBodySchema.parse(
+    const { id, friendId, action } = updateFriendRequestStatusBodySchema.parse(
       req.body,
     )
 
@@ -39,6 +40,7 @@ export default async function handler(
 
     await prisma.friend.updateMany({
       where: {
+        id,
         user_id: friendId,
         friend_id: userId,
       },
