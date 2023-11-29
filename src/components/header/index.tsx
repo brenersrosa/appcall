@@ -11,12 +11,15 @@ import { Heading } from '../ui/Heading'
 import { Text } from '../ui/Text'
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Button } from '../ui/Button'
 import { useRouter } from 'next/router'
 // import { Button } from '../ui/Button'
 // import { Widget } from '../ui/Notification/Widget'
 
-export function Header() {
+interface HeaderProps {
+  title: string
+}
+
+export function Header({ title }: HeaderProps) {
   const session = useSession()
   const router = useRouter()
 
@@ -27,8 +30,8 @@ export function Header() {
   }
 
   return (
-    <div className="mx-9 flex h-[120px] items-center justify-between">
-      <Heading>👋 Bem-vindo!</Heading>
+    <div className="mx-9 flex h-[120px] items-center justify-between border-b border-zinc-600">
+      <Heading>{title}</Heading>
 
       <div className="flex items-center justify-center gap-2 divide-x divide-zinc-600">
         {/* <DropdownMenu>
