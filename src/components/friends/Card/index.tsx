@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Check, X, Users } from 'phosphor-react'
@@ -6,8 +5,10 @@ import { Check, X, Users } from 'phosphor-react'
 import { Text } from '@/components/ui/Text'
 import { Button } from '@/components/ui/Button'
 
-import { FriendStatus } from '@prisma/client'
-import { api } from '@/lib/axios'
+enum FriendStatus {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+}
 
 enum FriendAction {
   SEND_REQUEST = 'send_request',
@@ -16,81 +17,35 @@ enum FriendAction {
 }
 
 interface CardFriendshipProps {
-  id: string
   status: FriendStatus
-  link: string
   avatarUrl: string
   avatarAlt: string
   name: string
   username: string
   variant?: 'request' | 'accepted'
+  requestId: string
+  onFriendAction: (requestId: string, action: FriendAction) => void
 }
 
 export function CardFriend({
-  id,
   status,
-  link,
   avatarUrl,
   avatarAlt,
   name,
-  username, // variant = 'request',
+  username,
+  requestId,
+  onFriendAction,
 }: CardFriendshipProps) {
-  const [friendStatus, setFriendStatus] = useState<FriendStatus | null>(status)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSender, setIsSender] = useState(false)
-  const [isReceiver, setIsReceiver] = useState(false)
-
-  const handleFriendAction = async (action: FriendAction) => {
-    setIsLoading(true)
+  async function handleFriendAction(action: FriendAction) {
     try {
-      let response
-      switch (action) {
-        case FriendAction.SEND_REQUEST:
-          response = await api.post('/users/friend-request/create', {
-            id,
-          })
-          if (response.status === 201) {
-            setFriendStatus(FriendStatus.pending)
-            setIsSender(true)
-            setIsReceiver(false)
-          }
-          setIsLoading(false)
-          break
-
-        case FriendAction.ACCEPT_REQUEST:
-          response = await api.put(`/users/friend-request/update`, {
-            id,
-            action: 'accept',
-          })
-          if (response.status === 200) {
-            setFriendStatus(FriendStatus.accepted)
-          }
-          setIsLoading(false)
-          break
-
-        case FriendAction.REMOVE_FRIEND:
-          response = await api.delete(`/users/friend-request/delete?id=${id}`)
-          if (response.status === 200) {
-            setFriendStatus(null)
-          }
-          setIsLoading(false)
-          break
-
-        default:
-          setIsLoading(false)
-          break
-      }
+      onFriendAction(requestId, action)
     } catch (error) {
       console.error(`ERROR | Error during ${action} friend request:`, error)
-      setIsLoading(false)
     }
   }
 
   return (
-    <div
-      // href={`/schedule/${link}`}
-      className="flex items-center justify-between gap-5 rounded-md border border-zinc-600 p-4 transition-colors hover:border-violet-500"
-    >
+    <div className="flex items-center justify-between gap-5 rounded-md border border-zinc-600 p-4 transition-colors hover:border-violet-500">
       <div className="flex gap-5 divide-x divide-zinc-600">
         <Image
           src={avatarUrl}
@@ -104,13 +59,16 @@ export function CardFriend({
           <Text className="font-semibold text-zinc-50" size="lg">
             {name}
           </Text>
-          <Text className="text-zinc-200" size="sm">
+          <Link
+            href={`/schedule/${username}`}
+            className="text-sm text-zinc-200 transition-colors hover:text-violet-200"
+          >
             @{username}
-          </Text>
+          </Link>
         </div>
       </div>
 
-      {friendStatus === 'accepted' ? (
+      {status === 'accepted' ? (
         <div>
           <Button
             className="min-w-[198px]"
@@ -128,13 +86,11 @@ export function CardFriend({
           <Button
             icon={Check}
             onClick={() => handleFriendAction(FriendAction.ACCEPT_REQUEST)}
-            // isLoading={isLoading}
           />
           <Button
             icon={X}
             variant="destructive"
             onClick={() => handleFriendAction(FriendAction.REMOVE_FRIEND)}
-            // isLoading={isLoading}
           />
         </div>
       )}

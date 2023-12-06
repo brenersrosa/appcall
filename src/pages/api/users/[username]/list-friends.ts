@@ -26,6 +26,10 @@ export default async function handle(
     where: {
       OR: [{ user_id: user.id }, { friend_id: user.id }],
     },
+    include: {
+      user: true,
+      friend: true,
+    },
     orderBy: {
       friend: {
         name: 'asc',
