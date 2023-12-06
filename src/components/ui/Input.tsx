@@ -11,10 +11,23 @@ export interface InputProps
   prefix?: string
   isInvalid?: boolean
   error?: FieldError
+  icon?: React.ElementType
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, label, prefix, isInvalid = false, error = null, ...props }, ref) => {
+  (
+    {
+      className,
+      type,
+      label,
+      prefix,
+      isInvalid = false,
+      error = null,
+      icon: Icon = () => null,
+      ...props
+    },
+    ref,
+  ) => {
     const invalidClass = isInvalid || error ? 'border-red-500' : ''
 
     return (
@@ -40,6 +53,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {prefix}
           </Text>
 
+          <Icon className="mr-4 h-5 w-5 text-zinc-400" />
+
           <input
             type={type}
             className={cn(
@@ -51,7 +66,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
         </div>
 
-        {error && <span className='text-sm text-red-500 italic'>{error?.message}</span>}
+        {error && (
+          <span className="text-sm italic text-red-500">{error?.message}</span>
+        )}
       </div>
     )
   },

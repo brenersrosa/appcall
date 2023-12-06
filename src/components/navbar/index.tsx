@@ -11,8 +11,8 @@ export function Navbar() {
   const username = session.data?.user.username
 
   return (
-    <div className="h-full min-h-screen w-52 divide-y divide-zinc-600 px-6">
-      <div className="flex h-[120px] flex-1 items-center justify-center">
+    <div className="row-span-2 w-52 divide-y divide-zinc-600 px-6">
+      <div className="flex h-[120px] items-center justify-center">
         <Image src={logoImg} alt="appCall logo" width={120} height={35} />
       </div>
 
