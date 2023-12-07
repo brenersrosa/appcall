@@ -14,6 +14,7 @@ enum FriendAction {
   SEND_REQUEST = 'send_request',
   ACCEPT_REQUEST = 'accept_request',
   REMOVE_FRIEND = 'remove_friend',
+  REJECT_REQUEST = 'remove_request',
 }
 
 interface CardFriendshipProps {
@@ -90,7 +91,7 @@ export function CardFriend({
           <Button
             icon={X}
             variant="destructive"
-            onClick={() => handleFriendAction(FriendAction.REMOVE_FRIEND)}
+            onClick={() => handleFriendAction(FriendAction.REJECT_REQUEST)}
           />
         </div>
       )}
