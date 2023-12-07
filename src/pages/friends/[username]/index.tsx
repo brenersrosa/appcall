@@ -24,6 +24,7 @@ enum FriendAction {
   SEND_REQUEST = 'send_request',
   ACCEPT_REQUEST = 'accept_request',
   REMOVE_FRIEND = 'remove_friend',
+  REJECT_REQUEST = 'remove_request',
 }
 
 interface FriendProps {
@@ -84,6 +85,12 @@ export default function Friends({
           )
           break
 
+        case FriendAction.REJECT_REQUEST:
+          response = await api.delete(
+            `/users/friend-request/delete?id=${requestId}`,
+          )
+          break
+
         default:
           setIsLoading(false)
           return
@@ -94,6 +101,8 @@ export default function Friends({
           'Sucesso!',
           action === FriendAction.ACCEPT_REQUEST
             ? 'Solicitação aceita com sucesso.'
+            : action === FriendAction.REJECT_REQUEST
+            ? 'Solicitação recusada com sucesso.'
             : 'Amizade removida com sucesso.',
           'success',
         )
@@ -116,6 +125,10 @@ export default function Friends({
               status: FriendStatus.ACCEPTED,
             })
           }
+        } else if (action === FriendAction.REJECT_REQUEST) {
+          updatedPendingRequests = updatedPendingRequests.filter(
+            (request) => request.id !== requestId,
+          )
         } else if (action === FriendAction.REMOVE_FRIEND) {
           updatedAcceptedFriends = updatedAcceptedFriends.filter(
             (friend) => friend.id !== requestId,
@@ -255,6 +268,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       redirect: {
         destination: '/',
         permanent: false,
+      },
+    }
+  }
+
+  if (session.user.username !== username) {
+    return {
+      redirect: {
+        destination: `/friends/${session.user.username}`,
+        permanent: true,
       },
     }
   }
