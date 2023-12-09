@@ -32,12 +32,6 @@ export default async function handler(
     req.query,
   )
 
-  // const idRequest = z.string().parse(req.query.id)
-  // const userLoggedId = z.string().parse(req.query.userLoggedId)
-  // const friendId = z.string().parse(req.query.friendId)
-
-  console.log(id)
-
   try {
     const friendRequest = await prisma.friend.findFirst({
       where: {

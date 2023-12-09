@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { MagnifyingGlass } from 'phosphor-react'
 
-import { Dashboard } from '@/components/dashboard'
+import { DashboardLayout } from '@/components/dashboard'
 import { Heading } from '@/components/ui/Heading'
 import { Input } from '@/components/ui/Input'
 import { CardFriend } from '@/components/friends/Card'
@@ -73,7 +73,7 @@ export default function Friends({
 
       switch (action) {
         case FriendAction.ACCEPT_REQUEST:
-          response = await api.put(`/users/friend-request/update`, {
+          response = await api.put('/users/friend-request/update', {
             requestId,
             action: 'accept',
           })
@@ -149,7 +149,7 @@ export default function Friends({
   }
 
   return (
-    <Dashboard
+    <DashboardLayout
       headerTitle="🖖 Amigos"
       heading="Encontre seu próximo compromisso"
       text="👇 Aqui estão seus amigos, ou se preferir, busque por uma nova agenda."
@@ -255,7 +255,7 @@ export default function Friends({
           )}
         </div>
       </div>
-    </Dashboard>
+    </DashboardLayout>
   )
 }
 

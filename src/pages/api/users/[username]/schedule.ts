@@ -5,6 +5,8 @@ import { google } from 'googleapis'
 
 import { prisma } from '@/lib/prisma'
 import { getGoogleOAuthToken } from '@/lib/google'
+import { getServerSession } from 'next-auth'
+import { buildNextAuthOptions } from '../../auth/[...nextauth]'
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,6 +15,18 @@ export default async function handle(
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
+
+  const session = await getServerSession(
+    req,
+    res,
+    buildNextAuthOptions(req, res),
+  )
+
+  if (!session) {
+    return res.status(401).end()
+  }
+
+  const senderId = session.user.id
 
   const username = String(req.query.username)
 
@@ -59,6 +73,14 @@ export default async function handle(
     })
   }
 
+  const notification = await prisma.notification.create({
+    data: {
+      sender_id: senderId,
+      user_id: user.id || '',
+      type: 'appointment',
+    },
+  })
+
   const scheduling = await prisma.scheduling.create({
     data: {
       creator_id: creator,
@@ -68,6 +90,18 @@ export default async function handle(
       observations,
       date: schedulingDate.toDate(),
       user_id: user.id,
+      notification: {
+        connect: {
+          id: notification.id,
+        },
+      },
+    },
+  })
+
+  await prisma.notification.update({
+    where: { id: notification.id },
+    data: {
+      scheduling_id: scheduling.id,
     },
   })
 

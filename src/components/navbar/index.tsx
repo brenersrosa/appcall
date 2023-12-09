@@ -1,6 +1,11 @@
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { SquaresFour, UsersThree } from 'phosphor-react'
+import {
+  CalendarPlus,
+  MagnifyingGlass,
+  SquaresFour,
+  UsersThree,
+} from 'phosphor-react'
 
 import { NavMenu } from './NavMenu'
 
@@ -23,11 +28,15 @@ export function Navbar() {
           title="Dashboard"
         />
 
+        <NavMenu url={`/new-appointment`} icon={CalendarPlus} title="Agendar" />
+
         <NavMenu
           url={`/friends/${username}`}
           icon={UsersThree}
           title="Amigos"
         />
+
+        <NavMenu url={`/search`} icon={MagnifyingGlass} title="Buscar" />
       </div>
     </div>
   )

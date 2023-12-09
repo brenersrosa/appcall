@@ -2,15 +2,17 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
-import dayjs from 'dayjs'
 import clsx from 'clsx'
 import { X } from 'phosphor-react'
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
 
 import { Calendar } from '@/components/ui/Calendar'
 
 import { api } from '@/lib/axios'
 import { Text } from '@/components/ui/Text'
 import { Heading } from '@/components/ui/Heading'
+dayjs.extend(isBetween)
 
 interface Appointment {
   id: string
@@ -87,7 +89,7 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
 
       {isDateSelected && (
-        <div className="flex flex-col gap-3 divide-y divide-zinc-700 p-6">
+        <div className="flex flex-col gap-3 divide-y divide-zinc-700 rounded-r-md bg-zinc-900 p-6">
           <div className="flex items-center justify-between">
             <p className="font-medium">
               {weekDay}, <span className="text-zinc-400">{describedDate}</span>
@@ -101,7 +103,7 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
               <X className="h-5 w-5 text-zinc-200" />
             </button>
           </div>
-          <div className="absolute bottom-0 right-0 top-14 mt-4 flex w-80 flex-col gap-3 overflow-y-scroll p-4">
+          <div className="absolute bottom-0 right-0 top-14 mt-4 flex w-80 flex-col gap-3 overflow-y-scroll rounded-r-md p-4">
             <div className="w-full grid-cols-2 gap-2 lg:grid lg:grid-cols-1">
               {upcomingAppointments?.appointments.length === 0 ? (
                 <div className="mt-4 flex h-full flex-1 flex-col items-center justify-center gap-4">
@@ -109,26 +111,64 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
                   <Text>Aparentemente tudo está calmo...</Text>
                 </div>
               ) : (
-                upcomingAppointments?.appointments.map((appointment) => (
-                  <div
-                    key={appointment.id}
-                    className="flex flex-1 items-center justify-between gap-2 rounded-md border border-zinc-800 bg-zinc-700/75 px-4 py-2"
-                  >
-                    <div className="flex flex-col gap-2">
-                      <Text>{dayjs(appointment.date).format('HH:mm')}h</Text>
-                      <Text size="lg" className="font-bold">
-                        {appointment.name}
-                      </Text>
+                upcomingAppointments?.appointments.map((appointment) => {
+                  const now = dayjs()
+
+                  const appointmentEnd = dayjs(appointment.date).add(1, 'hour')
+
+                  const isWithinCurrentHour = appointmentEnd.isBetween(
+                    appointment.date,
+                    now,
+                  )
+
+                  const isFuture = dayjs(appointment.date).isAfter(now, 'hour')
+
+                  return (
+                    <div
+                      key={appointment.id}
+                      className={clsx(
+                        'flex flex-1 items-center justify-between gap-2 rounded-md px-4 py-2',
+                        {
+                          'border border-zinc-700 bg-zinc-800 opacity-30':
+                            isWithinCurrentHour,
+                          'border border-zinc-700 bg-zinc-800': isFuture,
+                          'border border-zinc-600 bg-zinc-700':
+                            !isWithinCurrentHour,
+                        },
+                      )}
+                    >
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-start gap-2">
+                          <div
+                            className={clsx('h-3 w-3 rounded-full', {
+                              'bg-yellow-500': isFuture,
+                              'bg-red-500': isWithinCurrentHour,
+                              'bg-green-500': !isWithinCurrentHour,
+                            })}
+                          ></div>
+                          <Text>
+                            {dayjs(appointment.date).format('HH:mm')}h
+                          </Text>
+                        </div>
+                        <Text
+                          size="lg"
+                          className={clsx('font-bold', {
+                            'line-through': isWithinCurrentHour,
+                          })}
+                        >
+                          {appointment.name}
+                        </Text>
+                      </div>
+                      <Image
+                        className="rounded-full"
+                        src={appointment.creator.avatar_url}
+                        alt={appointment.name}
+                        width={40}
+                        height={40}
+                      />
                     </div>
-                    <Image
-                      className="rounded-full"
-                      src={appointment.creator.avatar_url}
-                      alt={appointment.name}
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                ))
+                  )
+                })
               )}
             </div>
           </div>

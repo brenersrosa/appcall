@@ -23,7 +23,7 @@ export function Toast({ show, title, message, type }: ToastProps) {
   return (
     <ToastRadix.Provider swipeDirection="right">
       <ToastRadix.Root
-        className="data-[state=closed]:animate-hide data-[state=open]:animate-slideIn data-[swipe=end]:animate-swipeOut flex items-center justify-between gap-10 rounded-lg bg-zinc-800 p-6 shadow-lg data-[swipe=cancel]:translate-x-0 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:transition-[transform_200ms_ease-out]"
+        className="flex items-center justify-between gap-10 rounded-lg bg-zinc-800 p-6 shadow-lg data-[swipe=cancel]:translate-x-0 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:animate-hide data-[state=open]:animate-slideIn data-[swipe=end]:animate-swipeOut data-[swipe=cancel]:transition-[transform_200ms_ease-out]"
         open={open}
         onOpenChange={(newOpen: boolean) => {
           setOpen(newOpen)

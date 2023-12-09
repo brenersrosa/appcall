@@ -13,10 +13,6 @@ import { Button } from '@/components/ui/Button'
 import { api } from '@/lib/axios'
 
 import { useToast } from '@/contexts/ToastContext'
-import { getSession, useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-import { prisma } from '@/lib/prisma'
-import { GetServerSideProps } from 'next'
 
 const confirmStepSchema = z.object({
   creator: z.string().uuid(),
