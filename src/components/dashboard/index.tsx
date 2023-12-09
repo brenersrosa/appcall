@@ -11,7 +11,7 @@ interface DashboardProps {
   children: ReactNode
 }
 
-export function Dashboard({
+export function DashboardLayout({
   headerTitle,
   heading,
   text,

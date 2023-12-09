@@ -1,59 +1,55 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import Link from 'next/link'
+import clsx from 'clsx'
 import moment from 'moment'
+import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
 
 import { ButtonActions } from './ButtonActions'
 import { WidgetIcon } from './WidgetIcon'
 
-import { Checks } from 'phosphor-react'
-import clsx from 'clsx'
-import { Heading } from '../Heading'
-import { Button } from '../Button'
-import { Text } from '../Text'
+import { Scheduling, User } from '@prisma/client'
 
-const notifications = [
-  {
-    id: '59d73668-1422-11ee-be56-0242ac120002',
-    description:
-      'Um novo vídeo de Mayk Brito foi publicado no ExpertsClub! Vem conferir!',
-    type: 'friend_request',
-    date: '2023-06-27T23:55:00.000Z',
-    asRead: true,
-  },
-  {
-    id: '60fddf46-1422-11ee-be56-0242ac120002',
-    description:
-      'Você recebeu um convite para fazer parte da empresa Rocketseat.',
-    type: 'friend_request',
-    date: '2023-06-27T23:50:00.000Z',
-    asRead: true,
-  },
-  {
-    id: '67266e38-1422-11ee-be56-0242ac120002',
-    description:
-      'Você foi mencionado no tópico "NextJS é o novo PHP?", por Diego Fernandes.',
-    type: 'appointment',
-    date: '2023-06-27T14:15:00.000Z',
-    asRead: true,
-  },
-  {
-    id: '6f804ae0-1422-11ee-be56-0242ac120002',
-    description: 'Flávia Oliveira e mais 5 pessoas gostaram do seu comentário.',
-    type: 'friend_request',
-    date: '2023-06-18T06:53:20.000Z',
-    asRead: true,
-  },
-  {
-    id: '732819fc-1422-11ee-be56-0242ac120002',
-    description: 'Novas aulas disponíveis no Ignite React JS. Venha conferir!',
-    type: 'appointment',
-    date: '2023-06-17T01:07:10.000Z',
-    asRead: true,
-  },
-]
+enum NotificationAction {
+  MARK_AS_READ = 'mark_as_read',
+  REMOVE_NOTIFICATION = 'remove_notification',
+}
 
-export function Widget() {
+enum NotificationType {
+  FRIEND_REQUEST = 'friend_request',
+  APPOINTMENT = 'appointment',
+}
+
+interface WidgetProps {
+  id: string
+  type: NotificationType
+  as_read: boolean
+  created_at: Date
+  user: User
+  sender: User
+  scheduling: Scheduling
+  onNotificationAction: (
+    notificationId: string,
+    asRead: boolean,
+    action: NotificationAction,
+  ) => void
+}
+
+export function Widget({
+  id,
+  type,
+  as_read,
+  created_at,
+  user,
+  sender,
+  scheduling,
+  onNotificationAction,
+}: WidgetProps) {
+  dayjs.locale('pt-br')
+
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  // const [notifications, setNotifications] = useState<NotificationProps[]>([])
+
+  const isHovered = id === hoveredItem
 
   const handleMouseEnter = (notificationId: string) => {
     setHoveredItem(notificationId)
@@ -63,139 +59,143 @@ export function Widget() {
     setHoveredItem(null)
   }
 
+  async function handleNotificationAction(action: NotificationAction) {
+    try {
+      onNotificationAction(id, as_read, action)
+    } catch (error) {
+      console.error(`ERROR | Error during ${action} friend request:`, error)
+    }
+  }
+
+  function formatTimeAgo(date: Date): string {
+    const currentDate = moment()
+    const targetDate = moment(date)
+    const diffDuration = moment.duration(currentDate.diff(targetDate))
+
+    const diffMonths = diffDuration.months()
+    const diffDays = diffDuration.days()
+    const diffHours = diffDuration.hours()
+    const diffMinutes = diffDuration.minutes()
+
+    if (diffMonths > 0) {
+      return `há ${diffMonths} meses`
+    } else if (diffDays > 0) {
+      return `há ${diffDays} dias`
+    } else if (diffHours > 0) {
+      return `há ${diffHours} horas`
+    } else {
+      if (diffMinutes <= 0) {
+        return 'Agora'
+      } else if (diffMinutes === 1) {
+        return `há ${diffMinutes} minuto`
+      } else {
+        return `há ${diffMinutes} minutos`
+      }
+    }
+  }
+
   return (
-    <div className="w-[448px] overflow-hidden rounded border border-zinc-700">
-      <div className="flex items-center justify-between bg-zinc-800 px-6 py-4">
-        <Heading size="sm">Notificações</Heading>
-        <Button
-          // onClick={() => ()}
-          variant="link"
-          className="text-zinc-400"
-        >
-          Marcar todas como lidas <Checks className="h-4 w-4" />
-        </Button>
-      </div>
+    <div className="max-h-96 overflow-y-scroll">
+      <div key={id} className="">
+        {type === NotificationType.FRIEND_REQUEST && (
+          <div
+            className="flex items-start gap-6 bg-zinc-900 px-8 py-4 hover:bg-zinc-800"
+            onMouseEnter={() => handleMouseEnter(id)}
+            onMouseLeave={handleMouseLeave}
+          >
+            <Link
+              href={`/friends/${user.username}`}
+              className="flex items-start gap-6"
+            >
+              <WidgetIcon type={type} asRead={as_read} />
 
-      <div>
-        <div className="divide-x divide-zinc-700 bg-zinc-950 px-5 py-2 text-sm font-medium text-zinc-400">
-          Recentes
-        </div>
-        {notifications.map((notification) => {
-          const isHovered = notification.id === hoveredItem
-          const shouldRender =
-            moment().diff(moment(notification.date), 'minutes') <= 15
-
-          if (shouldRender) {
-            return (
-              <div key={notification.id} className="divide-y-2 divide-zinc-950">
-                <div
-                  className="flex items-start gap-6 bg-zinc-900 px-8 py-4"
-                  onMouseEnter={() => handleMouseEnter(notification.id)}
-                  onMouseLeave={handleMouseLeave}
+              <div className="flex flex-1 flex-col gap-2">
+                <p
+                  className={clsx('bold leading-relaxed text-zinc-200', {
+                    'line-clamp-1': isHovered === true,
+                  })}
                 >
-                  <WidgetIcon
-                    type={notification.type}
-                    asRead={notification.asRead}
-                  />
-
-                  <div className="flex flex-1 flex-col gap-2">
-                    <p
-                      className={clsx('text-sm leading-relaxed text-zinc-400', {
-                        'line-clamp-2': isHovered === true,
-                      })}
-                    >
-                      {notification.description}
-                    </p>
-                    <div className="text-xxs flex items-center gap-1 text-zinc-400">
-                      <span>
-                        {notification.type === 'friend_request' &&
-                          'Solicitação de amizade'}
-                        {notification.type === 'appointment' &&
-                          'Convite para reunião'}
-                      </span>
-                      {/* <span> - {formatTimeAgo(notification.date)}</span> */}
-                    </div>
-                  </div>
-
-                  {isHovered && (
-                    <div className="flex gap-2 self-center">
-                      <ButtonActions variant="close" />
-                      <ButtonActions
-                        variant="check"
-                        asRead={notification.asRead}
-                        // onClick={() =>
-                        //   handleNotificationAsRead(notification.id)
-                        // }
-                      />
-                    </div>
-                  )}
+                  {`${sender.name} enviou uma solicitação de amizade.`}
+                </p>
+                <div className="flex flex-col items-start gap-2 text-sm text-zinc-400">
+                  <span>Solicitação de amizade</span>
+                  <span className="flex items-center justify-start gap-1 text-xs italic text-zinc-400">
+                    {formatTimeAgo(created_at)}
+                  </span>
                 </div>
               </div>
-            )
-          }
 
-          return null
-        })}
-      </div>
-
-      <div>
-        <div className="bg-zinc-950 px-5 py-2 text-sm font-medium text-zinc-400">
-          Antigas
-        </div>
-
-        {notifications.map((notification) => {
-          const isHovered = notification.id === hoveredItem
-          const shouldRender =
-            moment().diff(moment(notification.date), 'minutes') > 15
-
-          if (shouldRender) {
-            return (
-              <div key={notification.id} className="">
-                <div
-                  className="flex items-start gap-6 bg-zinc-900 px-8 py-4 hover:bg-zinc-800"
-                  onMouseEnter={() => handleMouseEnter(notification.id)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <WidgetIcon
-                    type={notification.type}
-                    asRead={notification.asRead}
+              {isHovered && (
+                <div className="flex gap-2 self-center">
+                  <ButtonActions
+                    variant="close"
+                    onClick={() =>
+                      handleNotificationAction(
+                        NotificationAction.REMOVE_NOTIFICATION,
+                      )
+                    }
                   />
-
-                  <div className="flex flex-1 flex-col gap-2">
-                    <Text size="sm" className="line-clamp-2">
-                      {notification.description}
-                    </Text>
-
-                    <div className="text-xxs flex items-center gap-1 text-zinc-400">
-                      <Text className="text-zinc-400">
-                        {notification.type === 'friend_request' &&
-                          'Solicitação de amizade'}
-                        {notification.type === 'appointment' &&
-                          'Convite para reunião'}
-                      </Text>
-                      {/* <Text size="sm"> - {formatTimeAgo(notification.date)}</Text size="sm"> */}
-                    </div>
-                  </div>
-
-                  {isHovered && (
-                    <div className="flex gap-2 self-center">
-                      <ButtonActions variant="close" />
-                      <ButtonActions
-                        variant="check"
-                        asRead={notification.asRead}
-                        // onClick={() =>
-                        //   handleNotificationAsRead(notification.id)
-                        // }
-                      />
-                    </div>
-                  )}
+                  <ButtonActions
+                    variant="check"
+                    onClick={() =>
+                      handleNotificationAction(NotificationAction.MARK_AS_READ)
+                    }
+                  />
                 </div>
-              </div>
-            )
-          }
+              )}
+            </Link>
+          </div>
+        )}
 
-          return null
-        })}
+        {type === NotificationType.APPOINTMENT && (
+          <div
+            className="flex items-start gap-6 bg-zinc-900 px-8 py-4 hover:bg-zinc-800"
+            onMouseEnter={() => handleMouseEnter(id)}
+            onMouseLeave={handleMouseLeave}
+          >
+            <WidgetIcon type={type} asRead={as_read} />
+
+            <div className="flex flex-1 flex-col gap-2">
+              <p
+                className={clsx('bold text-zinc-200', {
+                  'line-clamp-1': isHovered === true,
+                })}
+              >
+                {`${sender.name} realizou um agendamento.`}
+              </p>
+              <div className="flex flex-col items-start gap-2 text-sm text-zinc-400">
+                <span>
+                  Reunião marcada na{' '}
+                  {dayjs(scheduling?.date).format(
+                    'dddd, DD [de] MMMM [às] HH:mm[h]',
+                  )}
+                </span>
+                <span className="flex items-center justify-start gap-1 text-xs italic text-zinc-400">
+                  {formatTimeAgo(created_at)}
+                </span>
+              </div>
+            </div>
+
+            {isHovered && (
+              <div className="flex gap-2 self-center">
+                <ButtonActions
+                  variant="close"
+                  onClick={() =>
+                    handleNotificationAction(
+                      NotificationAction.REMOVE_NOTIFICATION,
+                    )
+                  }
+                />
+                <ButtonActions
+                  variant="check"
+                  onClick={() =>
+                    handleNotificationAction(NotificationAction.MARK_AS_READ)
+                  }
+                />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

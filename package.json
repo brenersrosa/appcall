@@ -43,10 +43,12 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
+    "ws": "^8.14.2",
     "zod": "^3.22.2"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.1.0",
+    "@types/ws": "^8.5.10",
     "eslint": "^8.48.0",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "prisma": "^5.3.1"

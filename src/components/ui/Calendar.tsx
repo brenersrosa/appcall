@@ -154,7 +154,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
   }, [currentDate, blockedDates])
 
   return (
-    <div className="p-6">
+    <div className="rounded-md bg-zinc-900 p-6">
       <div className="flex items-center justify-between">
         <div>
           <button
@@ -213,7 +213,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
                         onClick={() => onDateSelected(date.toDate())}
                         disabled={disabled}
                         className={clsx(
-                          'aspect-square w-full cursor-pointer rounded-lg text-center text-zinc-200 transition-colors focus:shadow-md disabled:cursor-default disabled:bg-zinc-800 disabled:opacity-40 disabled:hover:bg-zinc-800',
+                          'aspect-square w-full cursor-pointer rounded-lg bg-zinc-800 text-center text-zinc-200 transition-colors focus:shadow-md disabled:cursor-default disabled:bg-zinc-800/25 disabled:opacity-40 disabled:hover:bg-zinc-800',
                           {
                             'border border-purple-500 bg-purple-500 hover:bg-purple-600 focus:bg-purple-600':
                               isToday,

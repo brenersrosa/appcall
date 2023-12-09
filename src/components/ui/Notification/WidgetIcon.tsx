@@ -2,11 +2,11 @@ import clsx from 'clsx'
 import { CalendarPlus, UsersThree } from 'phosphor-react'
 
 interface WidgetIconProps {
-  type: string
+  type: 'friend_request' | 'appointment'
   asRead: boolean
 }
 
-export function WidgetIcon({ type, asRead = false }: WidgetIconProps) {
+export function WidgetIcon({ type, asRead }: WidgetIconProps) {
   return (
     <div className="relative">
       <div
