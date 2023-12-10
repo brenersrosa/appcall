@@ -17,14 +17,18 @@ export interface NavMenuProps
   icon: React.ElementType
   title: string
   className?: string
+  selected?: boolean
 }
 
 const NavMenu = React.forwardRef<HTMLAnchorElement, NavMenuProps>(
-  ({ className, icon: Icon = () => null, url, title, ...props }, ref) => {
+  (
+    { className, icon: Icon = () => null, url, title, selected, ...props },
+    ref,
+  ) => {
     const { asPath } = useRouter()
 
     const variantOption =
-      asPath === url
+      asPath === url || !!selected
         ? 'bg-violet-200 text-violet-800 hover:bg-violet-300'
         : 'text-zinc-400 hover:bg-zinc-800'
 

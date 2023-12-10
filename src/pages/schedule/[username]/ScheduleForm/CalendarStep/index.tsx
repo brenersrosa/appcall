@@ -78,7 +78,7 @@ export default function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
 
       {isDateSelected && (
-        <div className="flex flex-col gap-3 divide-y divide-zinc-700 p-6">
+        <div className="flex flex-col gap-3 divide-y divide-zinc-700 rounded-r-md bg-zinc-900 p-6">
           <div className="flex items-center justify-between">
             <p className="font-medium">
               {weekDay}, <span className="text-zinc-400">{describedDate}</span>

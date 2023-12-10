@@ -23,7 +23,7 @@ import { Checkbox } from '@/components/ui/Checkbox'
 
 const updateProfileSchema = z.object({
   schedulePrivate: z.boolean().default(false),
-  bio: z.string(),
+  bio: z.string().max(100),
 })
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>
@@ -99,6 +99,7 @@ export default function UpdateProfile() {
             label="Sobre você"
             placeholder="Fale um pouco sobre você. Isto será exibido em sua página pessoal."
             {...register('bio')}
+            limit={100}
             totalCharacters={watch('bio') ? watch('bio').length : 0}
           />
 

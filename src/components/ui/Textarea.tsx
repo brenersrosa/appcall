@@ -38,8 +38,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           )}
         >
           <textarea
+            maxLength={limit}
             className={cn(
-              'flex min-h-[200px] w-full resize-none rounded-md bg-zinc-900 leading-relaxed text-zinc-50 placeholder:text-zinc-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+              'flex min-h-[72px] w-full resize-none rounded-md bg-zinc-900 leading-relaxed text-zinc-50 placeholder:text-zinc-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
               className,
             )}
             ref={ref}

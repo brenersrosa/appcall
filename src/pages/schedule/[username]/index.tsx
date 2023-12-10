@@ -12,6 +12,15 @@ import { prisma } from '@/lib/prisma'
 
 import { api } from '@/lib/axios'
 import { cn } from '@/lib/utils'
+import { DashboardLayout } from '@/components/dashboard'
+import { Input } from '@/components/ui/Input'
+import {
+  Check,
+  MagnifyingGlass,
+  UserMinus,
+  UserPlus,
+  Users,
+} from 'phosphor-react'
 
 enum FriendStatus {
   PENDING = 'pending',
@@ -28,6 +37,7 @@ interface ScheduleProps {
   user: {
     id: string
     name: string
+    username: string
     bio: string
     avatarUrl: string
     schedulePrivate: boolean
@@ -117,11 +127,15 @@ export default function Schedule({
   }, [friend, userLoggedIn])
 
   return (
-    <div className="mx-auto mb-4 mt-20 flex max-w-[852px] flex-col gap-6 px-4">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <Header user={user} />
-
+    <DashboardLayout
+      headerTitle="📅 Agende um horário"
+      heading={user.name}
+      tag={user.username}
+      text={user.bio}
+      action={
         <Button
+          iconPosition="left"
+          icon={isFriend ? Users : UserPlus}
           hoverText={
             isFriend
               ? 'Remover amizade'
@@ -134,6 +148,19 @@ export default function Schedule({
                 !!isReceiver
               ? 'Aceitar solicitação'
               : 'Enviar solicitação'
+          }
+          hoverIcon={
+            isFriend
+              ? UserMinus
+              : friendStatus === FriendStatus.PENDING &&
+                !!isSender &&
+                !isReceiver
+              ? UserMinus
+              : friendStatus === FriendStatus.PENDING &&
+                !isSender &&
+                !!isReceiver
+              ? Check
+              : UserPlus
           }
           onClick={() =>
             handleFriendAction(
@@ -161,23 +188,25 @@ export default function Schedule({
             ? 'Solicitação enviada'
             : 'Enviar solicitação'}
         </Button>
+      }
+    >
+      <div className="mx-auto mb-4 mt-20 flex max-w-[852px] flex-col gap-6 px-4">
+        {(user.schedulePrivate === true &&
+          friendStatus === FriendStatus.ACCEPTED) ||
+        user.schedulePrivate === false ||
+        isFriend === true ? (
+          <ScheduleForm {...userLoggedIn} />
+        ) : (
+          <div className="my-4 flex flex-1 flex-col items-center justify-center gap-2">
+            <Heading size="lg">Ops!</Heading>
+            <Text className="text-center">
+              Essa é uma agenda privada, para visualizar envie uma solicitação
+              de amizade para {user?.name} clicando no botão acima. ☝
+            </Text>
+          </div>
+        )}
       </div>
-
-      {(user.schedulePrivate === true &&
-        friendStatus === FriendStatus.ACCEPTED) ||
-      user.schedulePrivate === false ||
-      isFriend === true ? (
-        <ScheduleForm {...userLoggedIn} />
-      ) : (
-        <div className="my-4 flex flex-1 flex-col items-center justify-center gap-2">
-          <Heading size="lg">Ops!</Heading>
-          <Text className="text-center">
-            Essa é uma agenda privada, para visualizar envie uma solicitação de
-            amizade para {user?.name} clicando no botão acima. ☝
-          </Text>
-        </div>
-      )}
-    </div>
+    </DashboardLayout>
   )
 }
 
@@ -222,6 +251,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user: {
         id: user.id,
         name: user.name,
+        username: user.username,
         bio: user.bio,
         avatarUrl: user.avatar_url,
         schedulePrivate: user.schedule_private,
