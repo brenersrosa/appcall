@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
-import { Bell, Checks, SignOut } from 'phosphor-react'
+import { Bell, CaretLeft, Checks, SignOut } from 'phosphor-react'
 import clsx from 'clsx'
 
 import {
@@ -53,10 +53,25 @@ export function Header({ title }: HeaderProps) {
   const [notificationsList, setNotificationsList] =
     useState<NotificationProps[]>()
   const [isLoading, setIsLoading] = useState(false)
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false)
 
   const session = useSession()
   const user = session.data?.user
   const router = useRouter()
+
+  useEffect(() => {
+    const currentPath = window.location.pathname
+    const pathLevels = currentPath.split('/')
+
+    if (
+      pathLevels.length > 2 &&
+      window.location.pathname.includes('/schedule')
+    ) {
+      setIsButtonEnabled(true)
+    } else {
+      setIsButtonEnabled(false)
+    }
+  }, [])
 
   async function handleSignOut() {
     await signOut()
@@ -160,7 +175,13 @@ export function Header({ title }: HeaderProps) {
 
   return (
     <div className="mx-9 flex h-[120px] items-center justify-between border-b border-zinc-600">
-      <Heading>{title}</Heading>
+      <div className="flex items-center gap-4">
+        {isButtonEnabled === true && (
+          <Button icon={CaretLeft} onClick={() => router.back()} />
+        )}
+
+        <Heading>{title}</Heading>
+      </div>
 
       <div className="flex items-center justify-center gap-2">
         <DropdownMenu>

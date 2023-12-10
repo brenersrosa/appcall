@@ -9,6 +9,7 @@ export default function Dashboard() {
     <DashboardLayout
       headerTitle="👋 Bem-vindo!"
       heading="Compromissos"
+      tag=""
       text="👇 Aqui estão seus próximos compromissos."
     >
       <div className="mx-auto mb-4 mt-20 flex max-w-[852px] flex-col gap-6 px-4">

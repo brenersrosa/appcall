@@ -10,10 +10,13 @@ import {
 import { NavMenu } from './NavMenu'
 
 import logoImg from '@/assets/logo.svg'
+import { useRouter } from 'next/router'
 
 export function Navbar() {
   const session = useSession()
   const username = session.data?.user.username
+
+  const isScheduleSelected = useRouter().asPath.startsWith(`/schedule`)
 
   return (
     <div className="row-span-2 w-52 divide-y divide-zinc-600 px-6">
@@ -28,7 +31,12 @@ export function Navbar() {
           title="Dashboard"
         />
 
-        <NavMenu url={`/new-appointment`} icon={CalendarPlus} title="Agendar" />
+        <NavMenu
+          url={`/scheduling`}
+          icon={CalendarPlus}
+          title="Agendar"
+          selected={isScheduleSelected}
+        />
 
         <NavMenu
           url={`/friends/${username}`}

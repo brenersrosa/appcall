@@ -21,7 +21,7 @@ const confirmStepSchema = z.object({
     .min(3, { message: 'O nome precisa ter pelo menos 3 caracteres.' }),
   email: z.string().email({ message: 'E-mail inválido' }),
   phone: z.string(),
-  observations: z.string(),
+  observations: z.string().max(100),
 })
 
 type ConfirmStepData = z.infer<typeof confirmStepSchema>
@@ -119,21 +119,23 @@ export default function ConfirmStep({
           error={errors.name}
         />
 
-        <Input
-          label="Endereço de e-mail"
-          placeholder="johndoe@gmail.com"
-          // message="Informe seu melhor e-mail."
-          {...register('email')}
-          // info
-          error={errors.email}
-        />
+        <div className="grid grid-cols-2 items-center gap-2">
+          <Input
+            label="E-mail"
+            placeholder="johndoe@gmail.com"
+            // message="Informe seu melhor e-mail."
+            {...register('email')}
+            // info
+            error={errors.email}
+          />
 
-        <Input
-          label="Telefone"
-          placeholder="(99) 999999999"
-          {...register('phone')}
-          error={errors.phone}
-        />
+          <Input
+            label="Telefone"
+            placeholder="(99) 999999999"
+            {...register('phone')}
+            error={errors.phone}
+          />
+        </div>
 
         <Textarea
           label="Observações"

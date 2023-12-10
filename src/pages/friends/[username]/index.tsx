@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { MagnifyingGlass } from 'phosphor-react'
@@ -59,6 +59,11 @@ export default function Friends({
     pendingRequests: initialPendingRequests,
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [searchFriend, setSearchFriend] = useState('')
+  const [filteredFriends, setFilteredFriends] = useState<FriendProps>({
+    acceptedFriends: [],
+    pendingRequests: [],
+  })
 
   const session = useSession()
   const userLoggedIn = session.data?.user
@@ -148,14 +153,41 @@ export default function Friends({
     }
   }
 
+  useEffect(() => {
+    const filterFriends = (friendList: FriendProps, searchTerm: string) => {
+      const filteredAcceptedFriends = friendList.acceptedFriends.filter(
+        (friend) =>
+          friend.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          friend.friend.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+      const filteredPendingRequests = friendList.pendingRequests.filter(
+        (request) =>
+          request.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          request.friend.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+
+      return {
+        acceptedFriends: filteredAcceptedFriends,
+        pendingRequests: filteredPendingRequests,
+      }
+    }
+
+    setFilteredFriends(filterFriends(friendsList, searchFriend.trim()))
+  }, [searchFriend, friendsList])
+
   return (
     <DashboardLayout
       headerTitle="🖖 Amigos"
       heading="Encontre seu próximo compromisso"
+      tag=""
       text="👇 Aqui estão seus amigos, ou se preferir, busque por uma nova agenda."
     >
       <div>
-        <Input icon={MagnifyingGlass} placeholder="Buscar" />
+        <Input
+          icon={MagnifyingGlass}
+          placeholder="Buscar"
+          onChange={(e) => setSearchFriend(e.target.value)}
+        />
       </div>
 
       <div className="flex flex-col gap-4">
@@ -207,8 +239,8 @@ export default function Friends({
         <Heading>Amigos</Heading>
 
         <div className="grid grid-cols-3 gap-4">
-          {friendsList.acceptedFriends.length > 0 ? (
-            friendsList.acceptedFriends.map((data) => (
+          {filteredFriends.acceptedFriends.length > 0 ? (
+            filteredFriends.acceptedFriends.map((data) => (
               <CardFriend
                 key={data.id}
                 status={data.status}
