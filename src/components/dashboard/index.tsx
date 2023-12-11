@@ -3,20 +3,29 @@ import { Header } from '../header'
 import { Navbar } from '../navbar'
 import { Heading } from '../ui/Heading'
 import { Text } from '../ui/Text'
+import schedule from '@/pages/api/users/[username]/schedule'
 
 interface DashboardProps {
   headerTitle: string
-  heading: string
-  tag: string
-  text: string
+  heading?: string
+  text?: string
   action?: ReactNode
   children: ReactNode
+  asSchedule?: boolean
+  avatarUrl?: string
+  name?: string
+  tag?: string
+  bio?: string
 }
 
 export function DashboardLayout({
   headerTitle,
   heading,
+  asSchedule = false,
+  avatarUrl,
+  name,
   tag,
+  bio,
   text,
   action,
   children,
@@ -30,15 +39,23 @@ export function DashboardLayout({
       <div className="col-start-2 flex flex-col gap-6 pl-9 pt-6">
         <div className="flex items-center justify-between pr-9">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 divide-x divide-zinc-200">
-              <Heading>{heading}</Heading>
-              {tag !== '' && (
-                <Text size="sm" className="pl-2 text-zinc-200">
-                  @{tag}
-                </Text>
-              )}
-            </div>
-            <Text>{text}</Text>
+            {asSchedule ? (
+              <>
+                <div className="flex items-center gap-2 divide-x divide-zinc-200">
+                  <Heading>{name}</Heading>
+                  <Text size="sm" className="pl-2 text-zinc-200">
+                    @{tag}
+                  </Text>
+                </div>
+
+                <Text>{bio}</Text>
+              </>
+            ) : (
+              <>
+                <Heading>{heading}</Heading>
+                <Text>{text}</Text>
+              </>
+            )}
           </div>
 
           <div>{action}</div>

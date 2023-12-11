@@ -3,6 +3,7 @@ import Image from 'next/image'
 import {
   CalendarPlus,
   MagnifyingGlass,
+  QrCode,
   SquaresFour,
   UsersThree,
 } from 'phosphor-react'
@@ -44,7 +45,7 @@ export function Navbar() {
           title="Amigos"
         />
 
-        <NavMenu url={`/search`} icon={MagnifyingGlass} title="Buscar" />
+        <NavMenu url={`/share-profile`} icon={QrCode} title="Compartilhar" />
       </div>
     </div>
   )
