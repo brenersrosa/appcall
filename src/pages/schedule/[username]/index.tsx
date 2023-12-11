@@ -129,9 +129,11 @@ export default function Schedule({
   return (
     <DashboardLayout
       headerTitle="📅 Agende um horário"
-      heading={user.name}
+      asSchedule={true}
+      avatarUrl={user.avatarUrl || ''}
+      name={user.name}
       tag={user.username}
-      text={user.bio}
+      bio={user.bio}
       action={
         <Button
           iconPosition="left"
