@@ -110,7 +110,7 @@ export default async function handle(
     auth: await getGoogleOAuthToken(user.id),
   })
 
-  await calendar.events.insert({
+  const googleData = await calendar.events.insert({
     calendarId: user.schedule_id || 'primary',
     conferenceDataVersion: 1,
     requestBody: {
@@ -144,6 +144,13 @@ export default async function handle(
           },
         ],
       },
+    },
+  })
+
+  await prisma.scheduling.update({
+    where: { id: scheduling.id },
+    data: {
+      meet_url: googleData.data.hangoutLink,
     },
   })
 

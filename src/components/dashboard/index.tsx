@@ -4,6 +4,7 @@ import { Navbar } from '../navbar'
 import { Heading } from '../ui/Heading'
 import { Text } from '../ui/Text'
 import schedule from '@/pages/api/users/[username]/schedule'
+import Image from 'next/image'
 
 interface DashboardProps {
   headerTitle: string
@@ -40,16 +41,26 @@ export function DashboardLayout({
         <div className="flex items-center justify-between pr-9">
           <div className="flex flex-col gap-2">
             {asSchedule ? (
-              <>
-                <div className="flex items-center gap-2 divide-x divide-zinc-200">
-                  <Heading>{name}</Heading>
-                  <Text size="sm" className="pl-2 text-zinc-200">
-                    @{tag}
-                  </Text>
-                </div>
+              <div className="flex items-center gap-4">
+                <Image
+                  src={avatarUrl || ''}
+                  alt={name || ''}
+                  width={56}
+                  height={56}
+                  className="rounded-full"
+                />
 
-                <Text>{bio}</Text>
-              </>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2 divide-x divide-zinc-200">
+                    <Heading>{name}</Heading>
+                    <Text size="sm" className="pl-2 text-zinc-200">
+                      @{tag}
+                    </Text>
+                  </div>
+
+                  <Text>{bio}</Text>
+                </div>
+              </div>
             ) : (
               <>
                 <Heading>{heading}</Heading>

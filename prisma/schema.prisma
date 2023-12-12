@@ -84,6 +84,7 @@ model UserTimeInterval {
 enum NotificationType {
   friend_request
   appointment
+  cancel_appointment
 }
 
 model Notification {
@@ -113,6 +114,7 @@ model Scheduling {
   email        String
   phone        String?
   observations String?
+  meet_url     String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

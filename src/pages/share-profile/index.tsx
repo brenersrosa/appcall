@@ -4,15 +4,17 @@ import { Text } from '@/components/ui/Text'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Download, ShareNetwork } from 'phosphor-react'
+import { Copy, Download, ShareNetwork } from 'phosphor-react'
 import QRCode from 'react-qr-code'
 import QRCodeLink from 'qrcode'
-import colors from 'tailwindcss/colors'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
+import { useToast } from '@/contexts/ToastContext'
 
 export default function ShareProfile() {
   const [qrCodeLink, setQrCodeLink] = useState('')
+
+  const { showToast } = useToast()
 
   const session = useSession()
   const user = session.data?.user
@@ -74,12 +76,14 @@ export default function ShareProfile() {
           <Button
             variant="link"
             className="flex items-center gap-2 transition-all hover:text-zinc-200"
-            onClick={() =>
+            onClick={() => {
               navigator.clipboard.writeText(
                 `appcall.com/schedule/${user?.username}`,
               )
-            }
+              showToast('Copiado!', 'Link copiado com sucesso.', 'success')
+            }}
           >
+            <Copy />
             appcall.com/schedule/{user?.username}
           </Button>
 

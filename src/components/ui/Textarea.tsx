@@ -15,7 +15,7 @@ export interface TextareaProps
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
-    { className, label, error = null, limit = 1000, totalCharacters, ...props },
+    { className, label, error = null, limit, totalCharacters, ...props },
     ref,
   ) => {
     return (
@@ -47,9 +47,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             {...props}
           />
 
-          <span className="flex flex-1 justify-end px-2 text-xs text-zinc-400">
-            {totalCharacters}/{limit} caracteres
-          </span>
+          {limit && (
+            <span className="flex flex-1 justify-end px-2 text-xs text-zinc-400">
+              {totalCharacters}/{limit} caracteres
+            </span>
+          )}
         </div>
       </div>
     )

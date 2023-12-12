@@ -34,7 +34,7 @@ export function Toast({ show, title, message, type }: ToastProps) {
           className={clsx(
             "flex items-center gap-4 before:h-3 before:w-3 before:rounded-full before:content-['']",
             {
-              'before:bg-ignite-500': type === 'success',
+              'before:bg-green-500': type === 'success',
               'before:bg-red-500': type === 'error',
               'before:bg-yellow-500': type === 'warning',
             },

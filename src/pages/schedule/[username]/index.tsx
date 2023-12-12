@@ -4,7 +4,6 @@ import { getSession } from 'next-auth/react'
 
 import ScheduleForm from './ScheduleForm'
 import { Button } from '@/components/ui/Button'
-import { Header } from '@/components/schedule/Header'
 import { Heading } from '@/components/ui/Heading'
 import { Text } from '@/components/ui/Text'
 
@@ -72,7 +71,7 @@ export default function Schedule({
     [friendStatus],
   )
 
-  const handleFriendAction = async (action: FriendAction) => {
+  async function handleFriendAction(action: FriendAction) {
     setIsLoading(true)
     try {
       let response

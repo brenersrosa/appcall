@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
 import { CaretLeft, CaretRight, ArrowUUpLeft } from 'phosphor-react'
 import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
 
 import { api } from '@/lib/axios'
 
@@ -59,7 +60,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
 
   const shortWeekDays = getWeekDays({ short: true })
 
-  const currentMonth = currentDate.format('MMMM')
+  const currentMonth = currentDate.locale('pt-br').format('MMMM')
   const currentYear = currentDate.format('YYYY')
 
   const username = String(router.query.username)

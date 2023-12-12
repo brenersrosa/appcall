@@ -18,6 +18,7 @@ enum NotificationAction {
 enum NotificationType {
   FRIEND_REQUEST = 'friend_request',
   APPOINTMENT = 'appointment',
+  CANCEL_APPOINTMENT = 'cancel_appointment',
 }
 
 interface WidgetProps {
@@ -164,8 +165,66 @@ export function Widget({
                 {`${sender.name} realizou um agendamento.`}
               </p>
               <div className="flex flex-col items-start gap-2 text-sm text-zinc-400">
-                <span>
+                <span
+                  className={clsx('', {
+                    'line-clamp-2': isHovered === true,
+                  })}
+                >
                   Reunião marcada na{' '}
+                  {dayjs(scheduling?.date).format(
+                    'dddd, DD [de] MMMM [às] HH:mm[h]',
+                  )}
+                </span>
+                <span className="flex items-center justify-start gap-1 text-xs italic text-zinc-400">
+                  {formatTimeAgo(created_at)}
+                </span>
+              </div>
+            </div>
+
+            {isHovered && (
+              <div className="flex gap-2 self-center">
+                <ButtonActions
+                  variant="close"
+                  onClick={() =>
+                    handleNotificationAction(
+                      NotificationAction.REMOVE_NOTIFICATION,
+                    )
+                  }
+                />
+                <ButtonActions
+                  variant="check"
+                  onClick={() =>
+                    handleNotificationAction(NotificationAction.MARK_AS_READ)
+                  }
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {type === NotificationType.CANCEL_APPOINTMENT && (
+          <div
+            className="flex items-start gap-6 bg-zinc-900 px-8 py-4 hover:bg-zinc-800"
+            onMouseEnter={() => handleMouseEnter(id)}
+            onMouseLeave={handleMouseLeave}
+          >
+            <WidgetIcon type={type} asRead={as_read} />
+
+            <div className="flex flex-1 flex-col gap-2">
+              <p
+                className={clsx('bold text-zinc-200', {
+                  'line-clamp-1': isHovered === true,
+                })}
+              >
+                {`${sender.name} cancelou um agendamento.`}
+              </p>
+              <div className="flex flex-col items-start gap-2 text-sm text-zinc-400">
+                <span
+                  className={clsx('', {
+                    'line-clamp-2': isHovered === true,
+                  })}
+                >
+                  Cancelada a reunião marcada na{' '}
                   {dayjs(scheduling?.date).format(
                     'dddd, DD [de] MMMM [às] HH:mm[h]',
                   )}

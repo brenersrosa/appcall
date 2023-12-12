@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Calendar, Clock } from 'phosphor-react'
 import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
 
 import { Input } from '@/components/ui/Input'
 import { Box } from '@/components/ui/Box'
@@ -63,11 +64,13 @@ export default function ConfirmStep({
   const router = useRouter()
   const username = String(router.query.username)
 
-  const describedDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
-  const describedTime = dayjs(schedulingDate).format('HH:mm[h]')
-  const formattedDate = dayjs(schedulingDate).format(
-    'dddd, DD [de] MMMM [às] HH:mm[h]',
-  )
+  const describedDate = dayjs(schedulingDate)
+    .locale('pt-br')
+    .format('DD[ de ]MMMM[ de ]YYYY')
+  const describedTime = dayjs(schedulingDate).locale('pt-br').format('HH:mm[h]')
+  const formattedDate = dayjs(schedulingDate)
+    .locale('pt-br')
+    .format('dddd, DD [de] MMMM [às] HH:mm[h]')
 
   async function handleConfirmScheduling(data: ConfirmStepData) {
     const { creator, name, email, phone, observations } = data

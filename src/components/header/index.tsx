@@ -189,7 +189,8 @@ export function Header({ title }: HeaderProps) {
             <div
               className={clsx('', {
                 'absolute -right-1 -top-1 h-2 w-2 rounded-full bg-red-500':
-                  notificationsList?.find(
+                  notificationsList &&
+                  notificationsList.find(
                     (notifications) => notifications.as_read === false,
                   ),
               })}
