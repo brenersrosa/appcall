@@ -1,11 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { z } from 'zod'
 import dayjs from 'dayjs'
 import { google } from 'googleapis'
-
-import { prisma } from '@/lib/prisma'
-import { getGoogleOAuthToken } from '@/lib/google'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
+import { z } from 'zod'
+
+import { getGoogleOAuthToken } from '@/lib/google'
+import { prisma } from '@/lib/prisma'
+
 import { buildNextAuthOptions } from '../../auth/[...nextauth]'
 
 export default async function handle(

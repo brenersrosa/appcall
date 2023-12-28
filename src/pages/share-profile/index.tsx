@@ -1,15 +1,15 @@
-import { DashboardLayout } from '@/components/dashboard'
-import { Heading } from '@/components/ui/Heading'
-import { Text } from '@/components/ui/Text'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { Copy, Download, ShareNetwork } from 'phosphor-react'
-import QRCode from 'react-qr-code'
+import { useSession } from 'next-auth/react'
+import { Copy, Download } from 'phosphor-react'
 import QRCodeLink from 'qrcode'
 import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/Button'
-import { useToast } from '@/contexts/ToastContext'
+import QRCode from 'react-qr-code'
+
+import { DashboardLayout } from '@/components/dashboard'
+import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
+import { Text } from '@/components/ui/text'
+import { useToast } from '@/contexts/toast-context'
 
 export default function ShareProfile() {
   const [qrCodeLink, setQrCodeLink] = useState('')

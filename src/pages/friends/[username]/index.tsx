@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react'
+import { User } from '@prisma/client'
 import { GetServerSideProps } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { MagnifyingGlass } from 'phosphor-react'
+import { useEffect, useState } from 'react'
 
 import { DashboardLayout } from '@/components/dashboard'
-import { Heading } from '@/components/ui/Heading'
-import { Input } from '@/components/ui/Input'
-import { CardFriend } from '@/components/friends/Card'
-import { Text } from '@/components/ui/Text'
-
-import { prisma } from '@/lib/prisma'
-import { User } from '@prisma/client'
+import { CardFriend } from '@/components/friends/card'
+import { Heading } from '@/components/ui/heading'
+import { Input } from '@/components/ui/input'
+import { Text } from '@/components/ui/text'
+import { useToast } from '@/contexts/toast-context'
 import { api } from '@/lib/axios'
-
-import { useToast } from '@/contexts/ToastContext'
+import { prisma } from '@/lib/prisma'
 
 enum FriendStatus {
   PENDING = 'pending',

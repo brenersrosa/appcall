@@ -1,25 +1,24 @@
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
-import { signOut, useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
-import { useQuery } from '@tanstack/react-query'
-import { Bell, CaretLeft, Checks, SignOut } from 'phosphor-react'
-import clsx from 'clsx'
-
+import { Scheduling, User } from '@prisma/client'
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu'
-
-import { Heading } from '../ui/Heading'
-import { Widget } from '../ui/Notification/Widget'
-import { Text } from '../ui/Text'
-import { Button } from '../ui/Button'
-import { Loading } from '../ui/Loading'
+import { useQuery } from '@tanstack/react-query'
+import clsx from 'clsx'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import { signOut, useSession } from 'next-auth/react'
+import { Bell, CaretLeft, Checks, SignOut } from 'phosphor-react'
+import { useEffect, useState } from 'react'
 
 import { api } from '@/lib/axios'
-import { Scheduling, User } from '@prisma/client'
+
+import { Button } from '../ui/button'
+import { Heading } from '../ui/heading'
+import { Loading } from '../ui/loading'
+import { Widget } from '../ui/notification/widget'
+import { Text } from '../ui/text'
 
 interface HeaderProps {
   title: string

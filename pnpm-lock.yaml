@@ -136,6 +136,9 @@ devDependencies:
   eslint:
     specifier: ^8.48.0
     version: 8.52.0
+  eslint-plugin-simple-import-sort:
+    specifier: ^10.0.0
+    version: 10.0.0(eslint@8.52.0)
   prettier-plugin-tailwindcss:
     specifier: ^0.5.4
     version: 0.5.6(prettier@3.0.3)
@@ -2357,6 +2360,14 @@ packages:
       resolve: 2.0.0-next.5
       semver: 6.3.1
       string.prototype.matchall: 4.0.10
+
+  /eslint-plugin-simple-import-sort@10.0.0(eslint@8.52.0):
+    resolution: {integrity: sha512-AeTvO9UCMSNzIHRkg8S6c3RPy5YEwKWSQPx3DYghLedo2ZQxowPFLGDN1AZ2evfg6r6mjBSZSLxLFsWSu3acsw==}
+    peerDependencies:
+      eslint: '>=5.0.0'
+    dependencies:
+      eslint: 8.52.0
+    dev: true
 
   /eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}

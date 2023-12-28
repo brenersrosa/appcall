@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import { google } from 'googleapis'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-import { prisma } from '@/lib/prisma'
 import { getGoogleOAuthToken } from '@/lib/google'
+import { prisma } from '@/lib/prisma'
 
 export default async function handle(
   req: NextApiRequest,

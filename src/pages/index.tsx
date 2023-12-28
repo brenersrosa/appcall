@@ -1,16 +1,15 @@
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
-import { signIn, useSession, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { getSession, signIn, useSession } from 'next-auth/react'
 import { GoogleLogo } from 'phosphor-react'
 
-import { ClaimUsernameForm } from '@/components/ClaimUsernameForm'
-import { Button } from '@/components/ui/Button'
-import { Heading } from '@/components/ui/Heading'
-import { Text } from '@/components/ui/Text'
-
-import logoImg from '@/assets/logo.svg'
 import heroImg from '@/assets/hero.svg'
+import logoImg from '@/assets/logo.svg'
+import { ClaimUsernameForm } from '@/components/claim-username-form'
+import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
+import { Text } from '@/components/ui/text'
 
 export default function Home() {
   const session = useSession()

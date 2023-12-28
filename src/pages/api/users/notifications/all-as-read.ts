@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 
-import { buildNextAuthOptions } from '../../auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
+
+import { buildNextAuthOptions } from '../../auth/[...nextauth]'
 
 const updateNotificationStatusBodySchema = z.object({
   userId: z.string().uuid(),

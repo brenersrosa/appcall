@@ -1,25 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
+import { Check, UserMinus, UserPlus, Users } from 'phosphor-react'
+import { useEffect, useMemo, useState } from 'react'
 
-import ScheduleForm from './ScheduleForm'
-import { Button } from '@/components/ui/Button'
-import { Heading } from '@/components/ui/Heading'
-import { Text } from '@/components/ui/Text'
-
-import { prisma } from '@/lib/prisma'
-
-import { api } from '@/lib/axios'
-import { cn } from '@/lib/utils'
 import { DashboardLayout } from '@/components/dashboard'
-import { Input } from '@/components/ui/Input'
-import {
-  Check,
-  MagnifyingGlass,
-  UserMinus,
-  UserPlus,
-  Users,
-} from 'phosphor-react'
+import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
+import { Text } from '@/components/ui/text'
+import { api } from '@/lib/axios'
+import { prisma } from '@/lib/prisma'
+import { cn } from '@/lib/utils'
+
+import ScheduleForm from './schedule-form'
 
 enum FriendStatus {
   PENDING = 'pending',

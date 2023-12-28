@@ -10,7 +10,7 @@ import { CaretRight } from 'phosphor-react'
 import { Box } from '@/components/ui/Box'
 import { Button } from '@/components/ui/Button'
 import { Heading } from '@/components/ui/Heading'
-import { MultiStepVertical } from '@/components/ui/MultiStepVertical'
+import { MultiStepVertical } from '@/components/ui/multi-step-vertical'
 import { Text } from '@/components/ui/Text'
 import { Textarea } from '@/components/ui/Textarea'
 

@@ -1,12 +1,12 @@
 import '@/styles/globals.css'
+
 import { QueryClientProvider } from '@tanstack/react-query'
-import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
-
-import { queryClient } from '@/lib/react-query'
-
 import { Exo, Nunito } from 'next/font/google'
-import { ToastProvider } from '@/contexts/ToastContext'
+import { SessionProvider } from 'next-auth/react'
+
+import { ToastProvider } from '@/contexts/toast-context'
+import { queryClient } from '@/lib/react-query'
 
 const exo = Exo({ subsets: ['latin'], variable: '--font-exo' })
 

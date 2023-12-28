@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { z } from 'zod'
 
 import { prisma } from '@/lib/prisma'
-import { z } from 'zod'
 
 const findUserRequestBodySchema = z.object({
   username: z.string(),

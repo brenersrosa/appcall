@@ -1,22 +1,19 @@
-import { useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { AxiosError } from 'axios'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { CaretRight } from 'phosphor-react'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { Box } from '@/components/ui/Box'
-import { Button } from '@/components/ui/Button'
-import { Heading } from '@/components/ui/Heading'
-import { Input } from '@/components/ui/Input'
-import { MultiStepVertical } from '@/components/ui/MultiStepVertical'
-import { Text } from '@/components/ui/Text'
-
-import { useToast } from '@/contexts/ToastContext'
-
+import { Box } from '@/components/ui/box'
+import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
+import { Input } from '@/components/ui/input'
+import { MultiStepVertical } from '@/components/ui/multi-step-vertical'
+import { Text } from '@/components/ui/text'
+import { useToast } from '@/contexts/toast-context'
 import { api } from '@/lib/axios'
-
 import { steps } from '@/utils/register-form-steps'
 
 const registerFormSchema = z.object({

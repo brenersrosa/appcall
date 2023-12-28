@@ -1,17 +1,11 @@
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import {
-  CalendarPlus,
-  MagnifyingGlass,
-  QrCode,
-  SquaresFour,
-  UsersThree,
-} from 'phosphor-react'
-
-import { NavMenu } from './NavMenu'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import { CalendarPlus, QrCode, SquaresFour, UsersThree } from 'phosphor-react'
 
 import logoImg from '@/assets/logo.svg'
-import { useRouter } from 'next/router'
+
+import { NavMenu } from './nav-menu'
 
 export function Navbar() {
   const session = useSession()

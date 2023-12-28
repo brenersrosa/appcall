@@ -1,17 +1,15 @@
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
 import { CaretRight, Check, X } from 'phosphor-react'
-
-import { Box } from '@/components/ui/Box'
-import { Button } from '@/components/ui/Button'
-import { Heading } from '@/components/ui/Heading'
-import { MultiStepVertical } from '@/components/ui/MultiStepVertical'
-import { Text } from '@/components/ui/Text'
-
-import { api } from '@/lib/axios'
-
-import { steps } from '@/utils/register-form-steps'
 import { useState } from 'react'
+
+import { Box } from '@/components/ui/box'
+import { Button } from '@/components/ui/button'
+import { Heading } from '@/components/ui/heading'
+import { MultiStepVertical } from '@/components/ui/multi-step-vertical'
+import { Text } from '@/components/ui/text'
+import { api } from '@/lib/axios'
+import { steps } from '@/utils/register-form-steps'
 
 export default function ConnectCalendar() {
   const [isSubmitting, setIsSubmitting] = useState(false)

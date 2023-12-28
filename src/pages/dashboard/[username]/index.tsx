@@ -1,16 +1,17 @@
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 
-import DashboardForm from './DashboardForm'
 import { DashboardLayout } from '@/components/dashboard'
+
+import DashboardForm from './dashboard-form'
 
 export default function Dashboard() {
   return (
     <DashboardLayout
       headerTitle="👋 Bem-vindo!"
-      heading="Compromissos"
+      heading="Dashboard"
       tag=""
-      text="👇 Aqui estão seus próximos compromissos."
+      text="👇 Tenha um overview das suas reuniões."
     >
       <div className="mx-auto mb-4 mt-20 flex max-w-[852px] flex-col gap-6 px-4">
         <DashboardForm />
